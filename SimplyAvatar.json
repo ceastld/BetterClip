@@ -1,0 +1,542 @@
+[
+    {
+        "Name": "神里绫华",
+        "Icon": "UI_AvatarIcon_Ayaka",
+        "Id": 10000002,
+        "Quality": 5
+    },
+    {
+        "Name": "琴",
+        "Icon": "UI_AvatarIcon_Qin",
+        "Id": 10000003,
+        "Quality": 5
+    },
+    {
+        "Name": "丽莎",
+        "Icon": "UI_AvatarIcon_Lisa",
+        "Id": 10000006,
+        "Quality": 4
+    },
+    {
+        "Name": "芭芭拉",
+        "Icon": "UI_AvatarIcon_Barbara",
+        "Id": 10000014,
+        "Quality": 4
+    },
+    {
+        "Name": "凯亚",
+        "Icon": "UI_AvatarIcon_Kaeya",
+        "Id": 10000015,
+        "Quality": 4
+    },
+    {
+        "Name": "迪卢克",
+        "Icon": "UI_AvatarIcon_Diluc",
+        "Id": 10000016,
+        "Quality": 5
+    },
+    {
+        "Name": "雷泽",
+        "Icon": "UI_AvatarIcon_Razor",
+        "Id": 10000020,
+        "Quality": 4
+    },
+    {
+        "Name": "安柏",
+        "Icon": "UI_AvatarIcon_Ambor",
+        "Id": 10000021,
+        "Quality": 4
+    },
+    {
+        "Name": "温迪",
+        "Icon": "UI_AvatarIcon_Venti",
+        "Id": 10000022,
+        "Quality": 5
+    },
+    {
+        "Name": "香菱",
+        "Icon": "UI_AvatarIcon_Xiangling",
+        "Id": 10000023,
+        "Quality": 4
+    },
+    {
+        "Name": "北斗",
+        "Icon": "UI_AvatarIcon_Beidou",
+        "Id": 10000024,
+        "Quality": 4
+    },
+    {
+        "Name": "行秋",
+        "Icon": "UI_AvatarIcon_Xingqiu",
+        "Id": 10000025,
+        "Quality": 4
+    },
+    {
+        "Name": "魈",
+        "Icon": "UI_AvatarIcon_Xiao",
+        "Id": 10000026,
+        "Quality": 5
+    },
+    {
+        "Name": "凝光",
+        "Icon": "UI_AvatarIcon_Ningguang",
+        "Id": 10000027,
+        "Quality": 4
+    },
+    {
+        "Name": "可莉",
+        "Icon": "UI_AvatarIcon_Klee",
+        "Id": 10000029,
+        "Quality": 5
+    },
+    {
+        "Name": "钟离",
+        "Icon": "UI_AvatarIcon_Zhongli",
+        "Id": 10000030,
+        "Quality": 5
+    },
+    {
+        "Name": "菲谢尔",
+        "Icon": "UI_AvatarIcon_Fischl",
+        "Id": 10000031,
+        "Quality": 4
+    },
+    {
+        "Name": "班尼特",
+        "Icon": "UI_AvatarIcon_Bennett",
+        "Id": 10000032,
+        "Quality": 4
+    },
+    {
+        "Name": "达达利亚",
+        "Icon": "UI_AvatarIcon_Tartaglia",
+        "Id": 10000033,
+        "Quality": 5
+    },
+    {
+        "Name": "诺艾尔",
+        "Icon": "UI_AvatarIcon_Noel",
+        "Id": 10000034,
+        "Quality": 4
+    },
+    {
+        "Name": "七七",
+        "Icon": "UI_AvatarIcon_Qiqi",
+        "Id": 10000035,
+        "Quality": 5
+    },
+    {
+        "Name": "重云",
+        "Icon": "UI_AvatarIcon_Chongyun",
+        "Id": 10000036,
+        "Quality": 4
+    },
+    {
+        "Name": "甘雨",
+        "Icon": "UI_AvatarIcon_Ganyu",
+        "Id": 10000037,
+        "Quality": 5
+    },
+    {
+        "Name": "阿贝多",
+        "Icon": "UI_AvatarIcon_Albedo",
+        "Id": 10000038,
+        "Quality": 5
+    },
+    {
+        "Name": "迪奥娜",
+        "Icon": "UI_AvatarIcon_Diona",
+        "Id": 10000039,
+        "Quality": 4
+    },
+    {
+        "Name": "莫娜",
+        "Icon": "UI_AvatarIcon_Mona",
+        "Id": 10000041,
+        "Quality": 5
+    },
+    {
+        "Name": "刻晴",
+        "Icon": "UI_AvatarIcon_Keqing",
+        "Id": 10000042,
+        "Quality": 5
+    },
+    {
+        "Name": "砂糖",
+        "Icon": "UI_AvatarIcon_Sucrose",
+        "Id": 10000043,
+        "Quality": 4
+    },
+    {
+        "Name": "辛焱",
+        "Icon": "UI_AvatarIcon_Xinyan",
+        "Id": 10000044,
+        "Quality": 4
+    },
+    {
+        "Name": "罗莎莉亚",
+        "Icon": "UI_AvatarIcon_Rosaria",
+        "Id": 10000045,
+        "Quality": 4
+    },
+    {
+        "Name": "胡桃",
+        "Icon": "UI_AvatarIcon_Hutao",
+        "Id": 10000046,
+        "Quality": 5
+    },
+    {
+        "Name": "枫原万叶",
+        "Icon": "UI_AvatarIcon_Kazuha",
+        "Id": 10000047,
+        "Quality": 5
+    },
+    {
+        "Name": "烟绯",
+        "Icon": "UI_AvatarIcon_Feiyan",
+        "Id": 10000048,
+        "Quality": 4
+    },
+    {
+        "Name": "宵宫",
+        "Icon": "UI_AvatarIcon_Yoimiya",
+        "Id": 10000049,
+        "Quality": 5
+    },
+    {
+        "Name": "托马",
+        "Icon": "UI_AvatarIcon_Tohma",
+        "Id": 10000050,
+        "Quality": 4
+    },
+    {
+        "Name": "优菈",
+        "Icon": "UI_AvatarIcon_Eula",
+        "Id": 10000051,
+        "Quality": 5
+    },
+    {
+        "Name": "雷电将军",
+        "Icon": "UI_AvatarIcon_Shougun",
+        "Id": 10000052,
+        "Quality": 5
+    },
+    {
+        "Name": "早柚",
+        "Icon": "UI_AvatarIcon_Sayu",
+        "Id": 10000053,
+        "Quality": 4
+    },
+    {
+        "Name": "珊瑚宫心海",
+        "Icon": "UI_AvatarIcon_Kokomi",
+        "Id": 10000054,
+        "Quality": 5
+    },
+    {
+        "Name": "五郎",
+        "Icon": "UI_AvatarIcon_Gorou",
+        "Id": 10000055,
+        "Quality": 4
+    },
+    {
+        "Name": "九条裟罗",
+        "Icon": "UI_AvatarIcon_Sara",
+        "Id": 10000056,
+        "Quality": 4
+    },
+    {
+        "Name": "荒泷一斗",
+        "Icon": "UI_AvatarIcon_Itto",
+        "Id": 10000057,
+        "Quality": 5
+    },
+    {
+        "Name": "八重神子",
+        "Icon": "UI_AvatarIcon_Yae",
+        "Id": 10000058,
+        "Quality": 5
+    },
+    {
+        "Name": "鹿野院平藏",
+        "Icon": "UI_AvatarIcon_Heizo",
+        "Id": 10000059,
+        "Quality": 4
+    },
+    {
+        "Name": "夜兰",
+        "Icon": "UI_AvatarIcon_Yelan",
+        "Id": 10000060,
+        "Quality": 5
+    },
+    {
+        "Name": "绮良良",
+        "Icon": "UI_AvatarIcon_Momoka",
+        "Id": 10000061,
+        "Quality": 4
+    },
+    {
+        "Name": "埃洛伊",
+        "Icon": "UI_AvatarIcon_Aloy",
+        "Id": 10000062,
+        "Quality": 105
+    },
+    {
+        "Name": "申鹤",
+        "Icon": "UI_AvatarIcon_Shenhe",
+        "Id": 10000063,
+        "Quality": 5
+    },
+    {
+        "Name": "云堇",
+        "Icon": "UI_AvatarIcon_Yunjin",
+        "Id": 10000064,
+        "Quality": 4
+    },
+    {
+        "Name": "久岐忍",
+        "Icon": "UI_AvatarIcon_Shinobu",
+        "Id": 10000065,
+        "Quality": 4
+    },
+    {
+        "Name": "神里绫人",
+        "Icon": "UI_AvatarIcon_Ayato",
+        "Id": 10000066,
+        "Quality": 5
+    },
+    {
+        "Name": "柯莱",
+        "Icon": "UI_AvatarIcon_Collei",
+        "Id": 10000067,
+        "Quality": 4
+    },
+    {
+        "Name": "多莉",
+        "Icon": "UI_AvatarIcon_Dori",
+        "Id": 10000068,
+        "Quality": 4
+    },
+    {
+        "Name": "提纳里",
+        "Icon": "UI_AvatarIcon_Tighnari",
+        "Id": 10000069,
+        "Quality": 5
+    },
+    {
+        "Name": "妮露",
+        "Icon": "UI_AvatarIcon_Nilou",
+        "Id": 10000070,
+        "Quality": 5
+    },
+    {
+        "Name": "赛诺",
+        "Icon": "UI_AvatarIcon_Cyno",
+        "Id": 10000071,
+        "Quality": 5
+    },
+    {
+        "Name": "坎蒂丝",
+        "Icon": "UI_AvatarIcon_Candace",
+        "Id": 10000072,
+        "Quality": 4
+    },
+    {
+        "Name": "纳西妲",
+        "Icon": "UI_AvatarIcon_Nahida",
+        "Id": 10000073,
+        "Quality": 5
+    },
+    {
+        "Name": "莱依拉",
+        "Icon": "UI_AvatarIcon_Layla",
+        "Id": 10000074,
+        "Quality": 4
+    },
+    {
+        "Name": "流浪者",
+        "Icon": "UI_AvatarIcon_Wanderer",
+        "Id": 10000075,
+        "Quality": 5
+    },
+    {
+        "Name": "珐露珊",
+        "Icon": "UI_AvatarIcon_Faruzan",
+        "Id": 10000076,
+        "Quality": 4
+    },
+    {
+        "Name": "瑶瑶",
+        "Icon": "UI_AvatarIcon_Yaoyao",
+        "Id": 10000077,
+        "Quality": 4
+    },
+    {
+        "Name": "艾尔海森",
+        "Icon": "UI_AvatarIcon_Alhatham",
+        "Id": 10000078,
+        "Quality": 5
+    },
+    {
+        "Name": "迪希雅",
+        "Icon": "UI_AvatarIcon_Dehya",
+        "Id": 10000079,
+        "Quality": 5
+    },
+    {
+        "Name": "米卡",
+        "Icon": "UI_AvatarIcon_Mika",
+        "Id": 10000080,
+        "Quality": 4
+    },
+    {
+        "Name": "卡维",
+        "Icon": "UI_AvatarIcon_Kaveh",
+        "Id": 10000081,
+        "Quality": 4
+    },
+    {
+        "Name": "白术",
+        "Icon": "UI_AvatarIcon_Baizhuer",
+        "Id": 10000082,
+        "Quality": 5
+    },
+    {
+        "Name": "琳妮特",
+        "Icon": "UI_AvatarIcon_Linette",
+        "Id": 10000083,
+        "Quality": 4
+    },
+    {
+        "Name": "林尼",
+        "Icon": "UI_AvatarIcon_Liney",
+        "Id": 10000084,
+        "Quality": 5
+    },
+    {
+        "Name": "菲米尼",
+        "Icon": "UI_AvatarIcon_Freminet",
+        "Id": 10000085,
+        "Quality": 4
+    },
+    {
+        "Name": "莱欧斯利",
+        "Icon": "UI_AvatarIcon_Wriothesley",
+        "Id": 10000086,
+        "Quality": 5
+    },
+    {
+        "Name": "那维莱特",
+        "Icon": "UI_AvatarIcon_Neuvillette",
+        "Id": 10000087,
+        "Quality": 5
+    },
+    {
+        "Name": "夏洛蒂",
+        "Icon": "UI_AvatarIcon_Charlotte",
+        "Id": 10000088,
+        "Quality": 4
+    },
+    {
+        "Name": "芙宁娜",
+        "Icon": "UI_AvatarIcon_Furina",
+        "Id": 10000089,
+        "Quality": 5
+    },
+    {
+        "Name": "夏沃蕾",
+        "Icon": "UI_AvatarIcon_Chevreuse",
+        "Id": 10000090,
+        "Quality": 4
+    },
+    {
+        "Name": "娜维娅",
+        "Icon": "UI_AvatarIcon_Navia",
+        "Id": 10000091,
+        "Quality": 5
+    },
+    {
+        "Name": "嘉明",
+        "Icon": "UI_AvatarIcon_Gaming",
+        "Id": 10000092,
+        "Quality": 4
+    },
+    {
+        "Name": "闲云",
+        "Icon": "UI_AvatarIcon_Liuyun",
+        "Id": 10000093,
+        "Quality": 5
+    },
+    {
+        "Name": "千织",
+        "Icon": "UI_AvatarIcon_Chiori",
+        "Id": 10000094,
+        "Quality": 5
+    },
+    {
+        "Name": "希格雯",
+        "Icon": "UI_AvatarIcon_Sigewinne",
+        "Id": 10000095,
+        "Quality": 5
+    },
+    {
+        "Name": "阿蕾奇诺",
+        "Icon": "UI_AvatarIcon_Arlecchino",
+        "Id": 10000096,
+        "Quality": 5
+    },
+    {
+        "Name": "赛索斯",
+        "Icon": "UI_AvatarIcon_Sethos",
+        "Id": 10000097,
+        "Quality": 4
+    },
+    {
+        "Name": "克洛琳德",
+        "Icon": "UI_AvatarIcon_Clorinde",
+        "Id": 10000098,
+        "Quality": 5
+    },
+    {
+        "Name": "艾梅莉埃",
+        "Icon": "UI_AvatarIcon_Emilie",
+        "Id": 10000099,
+        "Quality": 5
+    },
+    {
+        "Name": "卡齐娜",
+        "Icon": "UI_AvatarIcon_Kachina",
+        "Id": 10000100,
+        "Quality": 4
+    },
+    {
+        "Name": "基尼奇",
+        "Icon": "UI_AvatarIcon_Kinich",
+        "Id": 10000101,
+        "Quality": 5
+    },
+    {
+        "Name": "玛拉妮",
+        "Icon": "UI_AvatarIcon_Mualani",
+        "Id": 10000102,
+        "Quality": 5
+    },
+    {
+        "Name": "希诺宁",
+        "Icon": "UI_AvatarIcon_Xilonen",
+        "Id": 10000103,
+        "Quality": 5
+    },
+    {
+        "Name": "恰斯卡",
+        "Icon": "UI_AvatarIcon_Chasca",
+        "Id": 10000104,
+        "Quality": 5
+    },
+    {
+        "Name": "欧洛伦",
+        "Icon": "UI_AvatarIcon_Olorun",
+        "Id": 10000105,
+        "Quality": 4
+    }
+]
