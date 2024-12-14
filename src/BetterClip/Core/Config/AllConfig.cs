@@ -10,6 +10,12 @@ public partial class AllConfig : ObservableObject
     [ObservableProperty]
     private string? _test;
 
+    /// <summary>
+    /// 修改过后需要重启
+    /// </summary>
+    public string DataFolder { get; } = Global.UserDataPath();
+
+
     [JsonIgnore]
     public Action? OnAnyChangedAction { get; set; }
 

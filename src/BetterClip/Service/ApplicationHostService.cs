@@ -9,16 +9,11 @@ namespace BetterClip.Service
     /// <summary>
     /// Managed host of the application.
     /// </summary>
-    public class ApplicationHostService : IHostedService
+    public class ApplicationHostService(IServiceProvider serviceProvider) : IHostedService
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-        private INavigationWindow _navigationWindow;
-
-        public ApplicationHostService(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+        private INavigationWindow _navigationWindow = default!;
 
         /// <summary>
         /// Triggered when the application host is ready to start the service.
@@ -38,6 +33,8 @@ namespace BetterClip.Service
             await Task.CompletedTask;
         }
 
+        public static Type NavagatePageType { get; set; } = typeof(DashboardPage);
+
         /// <summary>
         /// Creates main window during activation.
         /// </summary>
@@ -50,7 +47,7 @@ namespace BetterClip.Service
                 )!;
                 _navigationWindow!.ShowWindow();
 
-                _navigationWindow.Navigate(typeof(View.Pages.DashboardPage));
+                _navigationWindow.Navigate(NavagatePageType);
             }
 
             await Task.CompletedTask;

@@ -5,7 +5,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace BetterClip.Control;
+namespace BetterClip.View.Controls;
 
 /// <summary>
 /// 值转换器

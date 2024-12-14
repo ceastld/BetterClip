@@ -366,3 +366,4 @@ MigrationBackup/
 
 .venv
 .config
+/Avatar

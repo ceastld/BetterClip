@@ -1,4 +1,6 @@
-﻿using Wpf.Ui.Appearance;
+﻿using System.Reflection;
+using System.Windows.Media;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace BetterClip.ViewModel.Pages
@@ -8,10 +10,10 @@ namespace BetterClip.ViewModel.Pages
         private bool _isInitialized = false;
 
         [ObservableProperty]
-        private string _appVersion = String.Empty;
+        private string _appVersion = string.Empty;
 
         [ObservableProperty]
-        private ApplicationTheme _currentTheme = ApplicationTheme.Unknown;
+        private ApplicationTheme _currentApplicationTheme = ApplicationTheme.Unknown;
 
         [ObservableProperty]
         private string _rootDataPath = String.Empty;
@@ -26,41 +28,28 @@ namespace BetterClip.ViewModel.Pages
 
         private void InitializeViewModel()
         {
-            CurrentTheme = ApplicationThemeManager.GetAppTheme();
-            AppVersion = $"UiDesktopApp1 - {GetAssemblyVersion()}";
-
+            CurrentApplicationTheme = ApplicationThemeManager.GetAppTheme();
+            AppVersion = $"BetterClip - {GetAssemblyVersion()}";
+            ApplicationThemeManager.Changed += OnThemeChanged;
             _isInitialized = true;
         }
 
-        private string GetAssemblyVersion()
+        partial void OnCurrentApplicationThemeChanged(ApplicationTheme oldValue, ApplicationTheme newValue)
         {
-            return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString()
-                ?? String.Empty;
+            ApplicationThemeManager.Apply(newValue);
         }
 
-        [RelayCommand]
-        private void OnChangeTheme(string parameter)
+        private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
         {
-            switch (parameter)
+            // Update the theme if it has been changed elsewhere than in the settings.
+            if (CurrentApplicationTheme != currentApplicationTheme)
             {
-                case "theme_light":
-                    if (CurrentTheme == ApplicationTheme.Light)
-                        break;
-
-                    ApplicationThemeManager.Apply(ApplicationTheme.Light);
-                    CurrentTheme = ApplicationTheme.Light;
-
-                    break;
-
-                default:
-                    if (CurrentTheme == ApplicationTheme.Dark)
-                        break;
-
-                    ApplicationThemeManager.Apply(ApplicationTheme.Dark);
-                    CurrentTheme = ApplicationTheme.Dark;
-
-                    break;
+                CurrentApplicationTheme = currentApplicationTheme;
             }
+        }
+        private static string GetAssemblyVersion()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty;
         }
     }
 }

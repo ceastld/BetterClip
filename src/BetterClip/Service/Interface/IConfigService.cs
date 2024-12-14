@@ -1,5 +1,5 @@
-﻿using BetterClip.Core.Config;
-using BetterClip.Model.Metadata;
+﻿using System.Windows.Forms;
+using BetterClip.Core.Config;
 
 namespace BetterClip.Service.Interface
 {
@@ -12,10 +12,5 @@ namespace BetterClip.Service.Interface
         AllConfig Read();
 
         void Write(AllConfig config);
-    }
-
-    public interface IMetadataService
-    {
-        IList<Avatar> GetAvatars();
     }
 }

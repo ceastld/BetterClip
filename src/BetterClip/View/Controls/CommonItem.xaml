@@ -1,0 +1,65 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:BetterClip.ViewModel.Common"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <DataTemplate DataType="{x:Type common:TextItemViewModel}">
+        <ui:TextBlock
+            MaxHeight="80"
+            Text="{Binding Text, Converter={StaticResource TextMinimizeIndentConverter}}"
+            TextTrimming="CharacterEllipsis"
+            TextWrapping="WrapWithOverflow" />
+        <!--<Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ui:TextBlock
+                    Grid.Row="0"
+                    FontTypography="Body"
+                    Text="{Binding VisualTitle}"
+                    TextWrapping="Wrap" />
+                <ui:TextBlock
+                    Grid.Row="1"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding VisualContent}"
+                    TextWrapping="Wrap" />
+            </Grid>-->
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type common:ImageItemViewModel}">
+        <ui:Image
+            MaxHeight="100"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            RenderOptions.BitmapScalingMode="HighQuality"
+            SnapsToDevicePixels="True"
+            Source="{Binding Path}"
+            Stretch="Uniform"
+            StretchDirection="DownOnly"
+            UseLayoutRounding="True" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type common:FileItemViewModel}">
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" IsEnabled="{Binding FilePath, Converter={StaticResource FilePathToExistsConverter}}">
+            <ui:TextBlock
+                Margin="5,0"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Right"
+                Text="{Binding FilePath, Converter={StaticResource FilePathToFileSizeConverter}}"
+                TextWrapping="WrapWithOverflow" />
+            <ui:ImageIcon
+                Width="24"
+                Height="24"
+                DockPanel.Dock="Left"
+                Source="{Binding FilePath, Converter={StaticResource FilePathToThumbnailConverter}}" />
+            <ui:TextBlock
+                Margin="5,0"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Left"
+                Text="{Binding FilePath, Converter={StaticResource FilePathToFileNameConverter}}"
+                TextWrapping="WrapWithOverflow" />
+        </DockPanel>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type common:MultiFileItemViewModel}">
+        <ItemsControl ItemsSource="{Binding Files}" />
+    </DataTemplate>
+</ResourceDictionary>

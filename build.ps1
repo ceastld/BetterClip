@@ -1,0 +1,1 @@
+dotnet build src/BetterClip --configuration Release

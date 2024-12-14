@@ -1,12 +1,11 @@
 ﻿using System.IO;
 using System.Net.Http;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using BetterClip.Core.Config;
 
-namespace BetterClip.Control;
+namespace BetterClip.View.Controls;
 
-public class CachedImage : Image
+public class CachedImage : Wpf.Ui.Controls.Image
 {
     static CachedImage()
     {
@@ -81,7 +80,7 @@ public class CachedImage : Image
         }
     }
 
-    private static void SetSource(Image inst, String path)
+    private static void SetSource(Wpf.Ui.Controls.Image inst, string path)
     {
         inst.Source = new BitmapImage(new Uri(path))
         {

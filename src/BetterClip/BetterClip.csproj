@@ -25,26 +25,41 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="DynamicData" Version="9.0.4" />
 		<PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
+		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
 		<PackageReference Include="WPF-UI" Version="3.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Remove="Assets\clip.ico" />
 		<None Remove="Assets\wpfui-icon-256.png" />
 		<None Remove="Assets\wpfui-icon-1024.png" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Resource Include="Assets\clip.ico" />
 		<Resource Include="Assets\wpfui-icon-256.png" />
 		<Resource Include="Assets\wpfui-icon-1024.png" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Resources\AvatarNameEN.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Resources\SimplyAvatar.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Model\Menu\" />
+	  <Folder Include="ViewModel\Clip\" />
 	</ItemGroup>
 
 </Project>

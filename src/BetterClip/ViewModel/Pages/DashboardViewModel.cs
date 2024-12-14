@@ -4,6 +4,7 @@ using BetterClip.Model.Metadata;
 using BetterClip.Service.Interface;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 
 namespace BetterClip.ViewModel.Pages
 {
@@ -40,8 +41,7 @@ namespace BetterClip.ViewModel.Pages
             if (SelectedAvatars.Count >= MaxAvatarCount)
             {
                 snackbarService.Show("提示消息", $"当前最多选择 {MaxAvatarCount} 个角色，已经选了 {SelectedAvatars.Count} 个",
-                                     ControlAppearance.Secondary, new SymbolIcon(SymbolRegular.Fluent24),
-                                     TimeSpan.FromSeconds(2));
+                    TimeSpan.FromSeconds(2));
                 return;
             }
             var selected_index = random.Next(Avatars.Count);
@@ -102,7 +102,7 @@ namespace BetterClip.ViewModel.Pages
 
         private void InitializeViewModel()
         {
-            Avatars = new ObservableCollection<Item>(metadataService.GetAvatars().Skip(3).Select(x => x.ToItem()));
+            Avatars = new ObservableCollection<Item>(metadataService.GetAvatars().Select(x => x.ToItem()));
             _isInitialized = true;
         }
 

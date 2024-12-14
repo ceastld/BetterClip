@@ -11,6 +11,11 @@ namespace BetterClip.Service;
 public class MetaDataService : IMetadataService
 {
     private IList<Avatar>? cachedAvatars = null; // Cache field to store avatars
+
+    public Avatar GetAvatar(int id) => GetAvatars().First(avatar => avatar.Id == id);
+
+    public Avatar GetAvatar(string name) => GetAvatars().First(avatar => avatar.Name == name);
+
     public IList<Avatar> GetAvatars()
     {
         if (cachedAvatars != null)
@@ -29,11 +34,13 @@ public class MetaDataService : IMetadataService
         }
 
         var avatar_list = new List<Avatar>();
+        var name_en_dict = GetAvatarNameENDict();
         foreach (JsonNode? item in avatarArray)
         {
             if (item != null)
             {
                 var avatar = JsonSerializer.Deserialize<Avatar>(item.ToString()) ?? throw new JsonException("Invalid JSON format");
+                avatar.NameEN = name_en_dict.GetValueOrDefault(avatar.Name, avatar.Icon.Split("_")[2]);
                 avatar_list.Add(avatar);
             }
         }
@@ -43,6 +50,11 @@ public class MetaDataService : IMetadataService
         // Cache the result for future calls
         cachedAvatars = avatar_list;
         return cachedAvatars;
+    }
+
+    private Dictionary<string, string> GetAvatarNameENDict()
+    {
+        return JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(Global.Absolute("Resources", "AvatarNameEN.json"))) ?? new Dictionary<string, string>();
     }
 }
 

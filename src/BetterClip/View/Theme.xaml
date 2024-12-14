@@ -1,0 +1,15 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:clr="clr-namespace:System;assembly=mscorlib"
+    xmlns:converters="clr-namespace:BetterClip.View.Converters">
+    <clr:String x:Key="UI_ImgSign_ItemIcon">https://api.snapgenshin.com/static/raw/Bg/UI_ImgSign_ItemIcon.png</clr:String>
+    <converters:ThemeToIndexConverter x:Key="ThemeToIndexConverter" />
+    <converters:FilePathToThumbnailConverter x:Key="FilePathToThumbnailConverter" />
+    <converters:FilePathToFileSizeConverter x:Key="FilePathToFileSizeConverter" />
+    <converters:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
+    <converters:FilePathToExistsConverter x:Key="FilePathToExistsConverter" />
+    <converters:TextMinimizeIndentConverter x:Key="TextMinimizeIndentConverter" />
+    <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+    <converters:QualityConverter x:Key="QualityConverter" />
+</ResourceDictionary>

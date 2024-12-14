@@ -3,8 +3,14 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using BetterClip.Helpers;
 
 namespace BetterClip.Core.Config;
+
+public class GlobalConfig
+{
+    public string UserDataPath { get; set; } = "";
+}
 
 public class Global
 {
@@ -22,9 +28,35 @@ public class Global
         ReadCommentHandling = JsonCommentHandling.Skip,
     };
 
+    public static GlobalConfig Config { get; } = CommonHelper.ObjectFromJsonFile<GlobalConfig>(
+        Absolute("Config", "manifest.json"), () => new(), ManifestJsonOptions);
+
     public static string Absolute(params string[] relativePath)
     {
         return Path.Combine([StartUpPath, .. relativePath]);
+    }
+
+    public static string CreateSubFolder(string parentDir, params string[] subFolderName)
+    {
+        var subFolderPath = Path.Combine([parentDir, .. subFolderName]);
+        Directory.CreateDirectory(subFolderPath);
+        return subFolderPath;
+    }
+
+    public static string CreateSubDataFolder(params string[] subFolderName)
+    {
+        return CreateSubFolder(UserDataPath(), subFolderName);
+    }
+    public static string UserDataPath(params string[] relativePath)
+    {
+        var userdataPath = Config.UserDataPath;
+        if (string.IsNullOrEmpty(userdataPath) || !Directory.Exists(userdataPath))
+        {
+            userdataPath = Path.Combine(StartUpPath, "UserData");
+            Directory.CreateDirectory(userdataPath);
+            Config.UserDataPath = userdataPath;
+        }
+        return Path.Combine([userdataPath, .. relativePath]);
     }
 
     public static string ScriptPath()

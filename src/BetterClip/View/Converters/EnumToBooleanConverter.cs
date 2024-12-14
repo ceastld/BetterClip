@@ -2,13 +2,13 @@
 using System.Windows.Data;
 using Wpf.Ui.Appearance;
 
-namespace BetterClip.Helpers
+namespace BetterClip.View.Converters
 {
     internal class EnumToBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (parameter is not String enumString)
+            if (parameter is not string enumString)
             {
                 throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName");
             }
@@ -25,7 +25,7 @@ namespace BetterClip.Helpers
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (parameter is not String enumString)
+            if (parameter is not string enumString)
             {
                 throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName");
             }

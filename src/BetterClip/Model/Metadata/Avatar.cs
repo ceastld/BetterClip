@@ -1,5 +1,5 @@
 ﻿using BetterClip.Model.Intrinsic;
-using BetterClip.Model.Metadata.Converter;
+using BetterClip.View.Converters;
 
 namespace BetterClip.Model.Metadata
 {
@@ -8,7 +8,9 @@ namespace BetterClip.Model.Metadata
         public int Id { get; set; }
         public string Icon { get; set; } = default!;
         public string Name { get; set; } = default!;
+        public string NameEN { get; set; } = default!;
         public QualityType Quality { get; set; }
+        public int Sort { get; set; }
         /// <summary>
         /// 转换为基础物品
         /// </summary>

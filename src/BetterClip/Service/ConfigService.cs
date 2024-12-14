@@ -1,12 +1,11 @@
 ﻿using BetterClip.Core.Config;
 using BetterClip.Service.Interface;
-using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
 
 namespace BetterClip.Service;
+
 public class ConfigService : IConfigService
 {
     private readonly object _locker = new(); // 只有UI线程会调用这个方法，lock好像意义不大，而且浪费了下面的读写锁hhh

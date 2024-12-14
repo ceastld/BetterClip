@@ -2,7 +2,7 @@
 using DependencyPropertyGenerator;
 
 
-namespace BetterClip.View.Control;
+namespace BetterClip.View.Controls;
 
 /// <summary>
 /// ItemIcon.xaml 的交互逻辑
@@ -10,6 +10,7 @@ namespace BetterClip.View.Control;
 [DependencyProperty("Quality", typeof(QualityType), DefaultValue = QualityType.QUALITY_NONE)]
 [DependencyProperty("Icon", typeof(Uri))]
 [DependencyProperty("Badge", typeof(Uri))]
+[DependencyProperty("CornerRadius", typeof(CornerRadius))]
 public partial class ItemIcon : System.Windows.Controls.UserControl
 {
     public ItemIcon()

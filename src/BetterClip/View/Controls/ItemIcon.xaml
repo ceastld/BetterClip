@@ -1,0 +1,26 @@
+﻿<UserControl
+    x:Class="BetterClip.View.Controls.ItemIcon"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:BetterClip.View.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Name="TheItemIcon"
+    d:DesignHeight="100"
+    d:DesignWidth="100"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style BasedOn="{StaticResource DefaultImageStyle}" TargetType="{x:Type controls:CachedImage}" />
+    </UserControl.Resources>
+    <Grid>
+        <controls:CachedImage CornerRadius="{Binding ElementName=TheItemIcon, Path=CornerRadius}" ImageUrl="{Binding Quality, Converter={StaticResource QualityConverter}, Mode=OneWay}" />
+        <controls:CachedImage CornerRadius="{Binding ElementName=TheItemIcon, Path=CornerRadius}" ImageUrl="{Binding Source={StaticResource UI_ImgSign_ItemIcon}}" />
+        <controls:CachedImage CornerRadius="{Binding ElementName=TheItemIcon, Path=CornerRadius}" ImageUrl="{Binding Icon}" />
+        <controls:CachedImage
+            Margin="2"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            ImageUrl="{Binding Badge, Mode=OneWay}" />
+    </Grid>
+</UserControl>

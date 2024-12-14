@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
+using System.Web;
 
 namespace BetterClip.Extension
 {
+
     internal static class StringExtension
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -14,5 +11,11 @@ namespace BetterClip.Extension
         {
             return new(value);
         }
+
+        public static string UrlEncode(this string value)
+        {
+            return HttpUtility.UrlEncode(value);
+        }
     }
+
 }

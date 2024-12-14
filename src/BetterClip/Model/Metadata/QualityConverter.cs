@@ -1,11 +1,11 @@
 ﻿// Copyright (c) DGP Studio. All rights reserved.
 // Licensed under the MIT license.
 
-using BetterClip.Control;
 using BetterClip.Extension;
 using BetterClip.Model.Intrinsic;
+using BetterClip.View.Controls;
 
-namespace BetterClip.Model.Metadata.Converter;
+namespace BetterClip.View.Converters;
 
 internal sealed class QualityConverter : ValueConverter<QualityType, Uri>
 {

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BetterClip.Control;
-using BetterClip.Extension;
+﻿using BetterClip.Extension;
+using BetterClip.View.Controls;
 
-namespace BetterClip.Model.Metadata.Converter;
+namespace BetterClip.View.Converters;
 
 internal sealed class AvatarIconConverter : ValueConverter<string, Uri>
 {
