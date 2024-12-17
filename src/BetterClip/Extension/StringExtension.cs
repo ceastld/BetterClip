@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Web;
 
 namespace BetterClip.Extension
@@ -15,6 +16,10 @@ namespace BetterClip.Extension
         public static string UrlEncode(this string value)
         {
             return HttpUtility.UrlEncode(value);
+        }
+        public static string ToJson(this object obj, JsonSerializerOptions options)
+        {
+            return JsonSerializer.Serialize(obj, options);
         }
     }
 

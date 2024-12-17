@@ -2,9 +2,9 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<ApplicationIcon>wpfui-icon.ico</ApplicationIcon>
+		<ApplicationIcon>clip.ico</ApplicationIcon>
 		<UseWPF>true</UseWPF>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -13,39 +13,45 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="wpfui-icon.ico" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Costura.Fody" Version="6.0.0">
+		<!--<PackageReference Include="Costura.Fody" Version="6.0.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		</PackageReference>-->
 		<PackageReference Include="DependencyPropertyGenerator" Version="1.4.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="DetectLanguage" Version="1.0.0" />
 		<PackageReference Include="DynamicData" Version="9.0.4" />
-		<PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
+		<PackageReference Include="gong-wpf-dragdrop" Version="4.0.0" />
 		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+		<!--<PackageReference Include="ReactiveUI.WPF" Version="20.1.63" />-->
+		<PackageReference Include="ReactiveUI" Version="20.1.63" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="Serilog.Sinks.RichTextBoxEx.Wpf" Version="1.1.0.1" />
 		<PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
 		<PackageReference Include="WPF-UI" Version="3.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Assets\clip.ico" />
-		<None Remove="Assets\wpfui-icon-256.png" />
-		<None Remove="Assets\wpfui-icon-1024.png" />
+	  <Content Include="clip.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Resource Include="Assets\clip.ico" />
+		<Resource Include="Assets\clip.png" />
 		<Resource Include="Assets\wpfui-icon-256.png" />
 		<Resource Include="Assets\wpfui-icon-1024.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Assets\Monaco\**">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -59,7 +65,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Model\Menu\" />
-	  <Folder Include="ViewModel\Clip\" />
+	  <Folder Include="View\Favor\" />
 	</ItemGroup>
 
 </Project>

@@ -1,14 +1,16 @@
 ﻿using System.Text.Json.Serialization;
 using System.Text.Json;
+using System;
+using BetterClip.Helpers;
 
 namespace BetterClip.Model.ClipData;
 
-public abstract class CommonItem
+public abstract partial class CommonItem
 {
     public string Id { get; set; } = default!;
     public string? Title { get; set; }
     public string? Description { get; set; }
-    public ItemType ItemType => this.GetItemType();
+    public string ItemType => GetType().Name;
     public DateTime CreateTime { get; set; }
     public DateTime UpdateTime { get; set; }
 
@@ -20,6 +22,15 @@ public abstract class CommonItem
         }
         return Title?.Contains(filter, StringComparison.OrdinalIgnoreCase) == true ||
                Description?.Contains(filter, StringComparison.OrdinalIgnoreCase) == true;
+    }
+
+    public CommonItem Clone()
+    {
+        return (CommonItem)MemberwiseClone();
+    }
+    public void NewId()
+    {
+        Id = Guid.NewGuid().ToBase62();
     }
 }
 
@@ -43,12 +54,17 @@ public class ImageItem : CommonItem
     public string Path { get; set; } = default!;
 }
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
-public enum ItemType
+public partial class FolderItem : CommonItem
 {
-    Text,
-    File,
-    Image
+    public bool IsExpanded { get; set; }
+    public List<string> Children { get; set; } = [];
+}
+
+public class ClipPageItem : CommonItem
+{
+    public List<string> ItemFilter { get; set; } = [];
+    public string FolderId { get; set; } = default!; // FolderId => 找到 folder, 然后可以显示children
+    //太复杂了，还是现把主要的功能实现吧
 }
 
 public class CommonItemJsonConverter : JsonConverter<CommonItem>
@@ -64,13 +80,14 @@ public class CommonItemJsonConverter : JsonConverter<CommonItem>
             // Log or handle the missing ItemType property
             throw new JsonException("ItemType is missing.");
         }
-        
-        ItemType itemType = Enum.Parse<ItemType>(itemTypeProperty.GetString()!, true);
+
+        string itemType = itemTypeProperty.GetString()!;
         return itemType switch
         {
-            ItemType.Text => JsonSerializer.Deserialize<TextItem>(root.GetRawText(), options)!,
-            ItemType.File => JsonSerializer.Deserialize<MultiFileItem>(root.GetRawText(), options)!,
-            ItemType.Image => JsonSerializer.Deserialize<ImageItem>(root.GetRawText(), options)!,
+            "Text" or "TextItem" => JsonSerializer.Deserialize<TextItem>(root.GetRawText(), options)!,
+            "File" or "FileItem" or "MultiFileItem" => JsonSerializer.Deserialize<MultiFileItem>(root.GetRawText(), options)!,
+            "Image" or "ImageItem" => JsonSerializer.Deserialize<ImageItem>(root.GetRawText(), options)!,
+            "Folder" or "FolderItem" => JsonSerializer.Deserialize<FolderItem>(root.GetRawText(), options)!,
             _ => throw new JsonException("Unknown ItemType")
         };
     }

@@ -12,14 +12,14 @@ using DynamicData;
 using System.Collections.ObjectModel;
 using DynamicData.Binding;
 using System.Reactive.Linq;
+using BetterClip.Helpers;
 
 namespace BetterClip.ViewModel.Pages;
-
 
 public partial class ClipViewModel : ViewModel, IDisposable
 {
     [ObservableProperty]
-    private ReadOnlyObservableCollection<ClipItemViewModel> _clipitems;
+    private ReadOnlyObservableCollection<CommonItemViewModel> _clipitems;
 
     [ObservableProperty]
     private bool _notify = true;
@@ -28,7 +28,7 @@ public partial class ClipViewModel : ViewModel, IDisposable
     private IList? _selectedItems;
 
     [ObservableProperty]
-    private ClipItemViewModel? _selectedItem;
+    private CommonItemViewModel? _selectedItem;
 
     [ObservableProperty]
     private int _selectedIndex = -1;
@@ -51,21 +51,30 @@ public partial class ClipViewModel : ViewModel, IDisposable
         var filter = SearchHints.WhenValueChanged(t => t.SearchText)
             .Select(BuildFilter!);
 
-        _cleanUp = clipDataService.All.Connect()
+        _cleanUp = clipDataService.ViewModels.Connect()
             //.BatchIf(this.WhenValueChanged(x=>x.SearchText))
             .Filter(filter)
-            .Transform(CommonItemHelper.ToViewModel)
-            .SortAndBind(out _clipitems, SortExpressionComparer<ClipItemViewModel>.Descending(item => item.Item.UpdateTime))
+            .SortAndBind(out _clipitems, SortExpressionComparer<CommonItemViewModel>.Descending(item => item.Item.UpdateTime))
             .Subscribe();
     }
 
     private readonly IDisposable _cleanUp;
 
-    private Func<CommonItem, bool> BuildFilter(string searchText)
+    private Func<CommonItemViewModel, bool> BuildFilter(string searchText)
     {
         if (string.IsNullOrEmpty(searchText)) return item => true;
 
-        return item => item.Filter(searchText);
+        return item => item.Item.Filter(searchText);
+    }
+
+    [RelayCommand]
+    private void EditSelected(object sender)
+    {
+        if(SelectedItem is TextItemViewModel textItem)
+        {
+            textItem.Text = CommonHelper.EditText(textItem.Text, sender);
+            textItem.SaveIfNeed();
+        }
     }
 
     [RelayCommand]
@@ -86,13 +95,7 @@ public partial class ClipViewModel : ViewModel, IDisposable
         int count = 0;
         foreach (var item in Clipitems)
         {
-            if (item.NeedSave)
-            {
-                item.OnSave();
-                ClipDataService.Save(item.Item);
-                item.NeedSave = false;
-                count++;
-            }
+            if (item.SaveIfNeed()) count++;
         }
     }
 
@@ -107,7 +110,7 @@ public partial class ClipViewModel : ViewModel, IDisposable
         }
     }
 
-    private List<ClipItemViewModel> GetSelectedItems() => SelectedItems?.Cast<ClipItemViewModel>().ToList() ?? [];
+    private List<CommonItemViewModel> GetSelectedItems() => SelectedItems?.Cast<CommonItemViewModel>().ToList() ?? [];
 
     [RelayCommand]
     private void OnDeleteSelected()
@@ -134,6 +137,9 @@ public partial class ClipViewModel : ViewModel, IDisposable
             ClipDataService.Save(item);
         }
     }
+
+    [RelayCommand]
+    private void OnOpenDataFolder() => CommonHelper.OpenFileOrUrl(ClipDataService.DataFolder);
 
     public IEnumerable<MenuItem> GenerateMenuItem()
     {

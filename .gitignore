@@ -367,3 +367,4 @@ MigrationBackup/
 .venv
 .config
 /Avatar
+/omnisharp*

@@ -1,9 +1,6 @@
-﻿using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Windows.Media.Imaging;
 using BetterClip.Helpers;
-using BetterClip.Service;
 using BetterClip.Service.Interface;
 using BetterClip.ViewModel.Common;
 
@@ -11,26 +8,30 @@ namespace BetterClip.Model.ClipData;
 
 public static class CommonItemHelper
 {
-    public static ItemType GetItemType(this CommonItem item)
+    public static CommonItem CloneInDataService(this CommonItem item, ICommonDataService dataService)
     {
-
-        return item switch
-        {
-            TextItem => ItemType.Text,
-            MultiFileItem => ItemType.File,
-            ImageItem => ItemType.Image,
-            _ => throw new ArgumentException("Invalid item type"),
-        };
+        return CloneToDataService(item, dataService, dataService);
     }
-
-    public static CommonItem CreateItem(ItemType type) => type switch
+    public static CommonItem CloneToDataService(this CommonItem oldItem, ICommonDataService from, ICommonDataService to)
     {
-        ItemType.Text => CreateItem<TextItem>(),
-        ItemType.File => CreateItem<MultiFileItem>(),
-        ItemType.Image => CreateItem<ImageItem>(),
-        _ => throw new ArgumentException("Invalid item type"),
-    };
-
+        var newItem = oldItem.Clone();
+        newItem.NewId();
+        to.Save(newItem);
+        if (from != to)
+        {
+            if (oldItem is ImageItem oldImageItem && newItem is ImageItem newImageItem)
+            {
+                var ext = Path.GetExtension(oldImageItem.Path);
+                var topath = to.GetImagePath(Guid.NewGuid().ToBase62() + ext);
+                if (!File.Exists(topath))
+                {
+                    File.Copy(from.GetImagePath(oldImageItem.Path),
+                        to.GetImagePath(newImageItem.Path));
+                }
+            }
+        }
+        return newItem;
+    }
     private static T CreateItem<T>(string? title = null, string? des = null) where T : CommonItem, new() => new()
     {
         Title = title,
@@ -60,14 +61,32 @@ public static class CommonItemHelper
         return item;
     }
 
-    public static ClipItemViewModel ToViewModel(this CommonItem item) => item switch
+    public static FolderItem CreateFolder(IEnumerable<string> children, string? title = null, string? des = null)
     {
-        TextItem textItem => new TextItemViewModel(textItem),
-        ImageItem imageItem => new ImageItemViewModel(imageItem),
-        MultiFileItem fileItem => new MultiFileItemViewModel(fileItem),
+        var item = CreateItem<FolderItem>(title, des);
+        item.Children = [.. children];
+        return item;
+    }
+    public static FolderItemViewModel ToViewModel(this FolderItem item, ICommonDataService dataService) => new(item, dataService);
+    public static TextItemViewModel ToViewModel(this TextItem item, ICommonDataService dataService) => new(item, dataService);
+    public static ImageItemViewModel ToViewModel(this ImageItem item, ICommonDataService dataService) => new(item, dataService);
+    public static MultiFileItemViewModel ToViewModel(this MultiFileItem item, ICommonDataService dataService) => new(item, dataService);
+    public static CommonItemViewModel ToViewModel(this CommonItem item, ICommonDataService dataService) => item switch
+    {
+        TextItem textItem => new TextItemViewModel(textItem, dataService),
+        ImageItem imageItem => new ImageItemViewModel(imageItem, dataService),
+        MultiFileItem fileItem => new MultiFileItemViewModel(fileItem, dataService),
+        FolderItem folderItem => new FolderItemViewModel(folderItem, dataService),
         _ => throw new NotImplementedException()
     };
 
+    public static CommonItemViewModel ToViewModelAutoSave(this CommonItem item, ICommonDataService dataService)
+    {
+        var vm = item.ToViewModel(dataService);
+        vm.OpenEdit();
+        vm.ObserveSave();
+        return vm;
+    }
     public static List<CommonItem> GetTestData()
     {
         return [
@@ -101,13 +120,10 @@ public static class CommonItemHelper
         ReadCommentHandling = JsonCommentHandling.Skip,
     };
 
-    public static string ToJson<T>(T item) => JsonSerializer.Serialize(item, JsonOptions);
     public static string ToJson(this IList<CommonItem> item) => JsonSerializer.Serialize(item, JsonOptions);
     public static string ToJson(this CommonItem item) => JsonSerializer.Serialize(item, JsonOptions);
     public static T? FromJson<T>(string json) => JsonSerializer.Deserialize<T>(json, JsonOptions);
     public static CommonItem? FromJson(string json) => JsonSerializer.Deserialize<CommonItem>(json, JsonOptions);
-
-
 }
 
 

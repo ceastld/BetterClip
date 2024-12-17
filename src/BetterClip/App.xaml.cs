@@ -14,6 +14,12 @@ using BetterClip.Service.Interface;
 using Serilog;
 using Microsoft.Extensions.Logging;
 using BetterClip.ViewModel.Common;
+using System.Diagnostics;
+using BetterClip.Core.Config;
+using Wpf.Ui.Appearance;
+using Serilog.Sinks.RichTextBox.Abstraction;
+using Serilog.Events;
+using Serilog.Sinks.RichTextBox.Themes;
 
 namespace BetterClip
 {
@@ -28,60 +34,72 @@ namespace BetterClip
         // https://docs.microsoft.com/dotnet/core/extensions/configuration
         // https://docs.microsoft.com/dotnet/core/extensions/logging
         private static readonly IHost _host = Host.CreateDefaultBuilder()
-            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)); })
-            .ConfigureServices((context, services) =>
-            {
-                // 提前初始化配置
-                var configService = new ConfigService();
-                services.AddSingleton<IConfigService>(sp => configService);
-                var all = configService.Get();
+    .ConfigureAppConfiguration(c =>
+    {
+        var basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? string.Empty);
+        c.SetBasePath(basePath!);
+    })
+    .ConfigureServices((context, services) =>
+    {
+        services.AddSingleton<ConfigService>();
 
-                var logFolder = Path.Combine(AppContext.BaseDirectory, "log");
-                Directory.CreateDirectory(logFolder);
-                var logFile = Path.Combine(logFolder, "better-clip.log");
-                var loggerConfiguration = new LoggerConfiguration()
-                    .WriteTo.File(path: logFile, outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}] {SourceContext}{NewLine}{Message}{NewLine}{Exception}{NewLine}", rollingInterval: RollingInterval.Day);
+        var logFolder = Global.LogFolder;
+        Directory.CreateDirectory(logFolder);
+        var loggerConfiguration = new LoggerConfiguration()
+            .WriteTo.File(path: Global.LogFile, outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}] {SourceContext}{NewLine}{Message}{NewLine}{Exception}{NewLine}", rollingInterval: RollingInterval.Day);
+        var richTextBox = new RichTextBoxImpl();
+        services.AddSingleton<IRichTextBox>(richTextBox);
+        loggerConfiguration.WriteTo.RichTextBox(richTextBox,
+            LogEventLevel.Information,
+            outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+            theme: RichTextBoxConsoleThemes.Colored);
+        Log.Logger = loggerConfiguration.CreateLogger();
+        services.AddLogging(c => c.AddSerilog());
 
-                Log.Logger = loggerConfiguration.CreateLogger();
-                services.AddLogging(c => c.AddSerilog());
+        services.AddSingleton<IMetadataService, MetaDataService>();
+        services.AddSingleton<ISnackbarService, SnackbarService>();
 
+        services.AddHostedService<ApplicationHostService>();
+        ApplicationHostService.NavagatePageType = typeof(FavorPage);
 
-                services.AddSingleton<IMetadataService, MetaDataService>();
-                services.AddSingleton<ISnackbarService, SnackbarService>();
+        // Page resolver service
+        services.AddSingleton<IPageService, PageService>();
 
-                services.AddHostedService<ApplicationHostService>();
-                ApplicationHostService.NavagatePageType = typeof(ClipPage);
+        // Theme manipulation
+        services.AddSingleton<IThemeService, ThemeService>();
 
-                // Page resolver service
-                services.AddSingleton<IPageService, PageService>();
+        // TaskBar manipulation
+        services.AddSingleton<ITaskBarService, TaskBarService>();
 
-                // Theme manipulation
-                services.AddSingleton<IThemeService, ThemeService>();
+        // Service containing navigation, same as INavigationWindow... but without window
+        services.AddSingleton<INavigationService, NavigationService>();
 
-                // TaskBar manipulation
-                services.AddSingleton<ITaskBarService, TaskBarService>();
+        // Clip
+        services.AddSingleton<IClipDataService, ClipDataService>();
+        services.AddSingleton<IClipboardService, ClipboardService>();
+        services.AddTransient<SearchHints>();
+        services.AddSingleton<IFavorDataService, FavorDataService>();
 
-                // Service containing navigation, same as INavigationWindow... but without window
-                services.AddSingleton<INavigationService, NavigationService>();
+        // Main window with navigation
+        services.AddSingleton<INavigationWindow, MainWindow>();
+        services.AddSingleton<MainWindowViewModel>();
 
-                // Clip
-                services.AddSingleton<IClipDataService, ClipDataService>();
-                services.AddSingleton<IClipboardService, ClipboardService>();
-                services.AddTransient<SearchHints>();
-                
-                // Main window with navigation
-                services.AddSingleton<INavigationWindow, MainWindow>();
-                services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<DashboardPage>();
+        services.AddSingleton<DashboardViewModel>();
+        services.AddSingleton<DataPage>();
+        services.AddSingleton<DataViewModel>();
+        services.AddSingleton<SettingsPage>();
+        services.AddSingleton<SettingsViewModel>();
+        services.AddSingleton<ClipPage>();
+        services.AddSingleton<ClipViewModel>();
+        services.AddSingleton<FavorPage>();
+        services.AddSingleton<FavorViewModel>();
+        services.AddSingleton<LoggingPage>();
+        services.AddSingleton<LoggingViewModel>();
 
-                services.AddSingleton<DashboardPage>();
-                services.AddSingleton<DashboardViewModel>();
-                services.AddSingleton<DataPage>();
-                services.AddSingleton<DataViewModel>();
-                services.AddSingleton<SettingsPage>();
-                services.AddSingleton<SettingsViewModel>();
-                services.AddSingleton<ClipPage>();
-                services.AddSingleton<ClipViewModel>();
-            }).Build();
+        // 添加页面的方法：需要同时注册页面和对应的 ViewModel 以及所有依赖项。若未正确注册，页面可能无法打开且不会报错。
+
+    }).Build();
 
         /// <summary>
         /// Gets registered service.
@@ -90,7 +108,8 @@ namespace BetterClip
         /// <returns>Instance of the service or <see langword="null"/>.</returns>
         public static T GetService<T>() where T : class
         {
-            return (T)_host.Services.GetService(typeof(T))!;
+            return _host.Services.GetService<T>()
+                ?? ActivatorUtilities.CreateInstance<T>(_host.Services);
         }
 
         public static ILogger<T> GetLogger<T>()
@@ -105,7 +124,6 @@ namespace BetterClip
         {
             // see: https://stackoverflow.com/questions/65739383/dispatcherscheduler-missing-from-system-reactive-5-0
             SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
-
             _host.Start();
             var clipboardService = GetService<IClipboardService>();
             clipboardService.MonitorOn();
@@ -121,13 +139,20 @@ namespace BetterClip
             _host.Dispose();
         }
 
+        public static void ReStart()
+        {
+            string appPath = Environment.ProcessPath ?? Global.AppPath;
+            Process.Start(appPath);
+            Current.Shutdown();
+        }
+
         /// <summary>
         /// Occurs when an exception is thrown by an application but not handled.
         /// </summary>
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
-            e.Handled = true;
+            //e.Handled = true;
         }
     }
 }

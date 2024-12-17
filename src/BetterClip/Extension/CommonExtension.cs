@@ -1,5 +1,4 @@
-﻿using System.Reactive.Linq;
-using Wpf.Ui;
+﻿using Wpf.Ui;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
 
@@ -28,14 +27,6 @@ namespace BetterClip.Extension
                 var icon = new SymbolIcon(SymbolRegular.ErrorCircle24);
                 snackbarService.Show("Error", info, icon, timeout: TimeSpan.FromSeconds(time));
             });
-        }
-        public static IObservable<TSource> ObserveOnDispatcher<TSource>(this IObservable<TSource> source)
-        {
-            return source.ObserveOn(SynchronizationContext.Current!); // UI 线程上运行
-        }
-        public static IObservable<TSource> SubscribeOnDispatcher<TSource>(this IObservable<TSource> source)
-        {
-            return source.SubscribeOn(SynchronizationContext.Current!);
         }
     }
 }

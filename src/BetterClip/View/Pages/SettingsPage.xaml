@@ -16,8 +16,8 @@
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d">
     <StackPanel>
-
-        <ui:TextBlock Margin="0,0,0,8" FontTypography="BodyStrong" Text="Appearance &amp; behavior" />
+        <!--<ui:TextBlock Margin="0,0,0,8" FontTypography="BodyStrong" Text="Appearance &amp; behavior" />-->
+        <ui:TextBlock Margin="0,0,0,8" FontTypography="BodyStrong" Text="Global" />
         <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Color24}">
             <ui:CardControl.Header>
                 <Grid>
@@ -25,20 +25,40 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="App theme" />
-                    <ui:TextBlock Grid.Row="1" Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="Select which app theme to display" />
+                    <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="应用主题" />
+                    <ui:TextBlock Grid.Row="1" Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="选择使用什么主题" />
                 </Grid>
             </ui:CardControl.Header>
-            <ComboBox Grid.Column="1" MinWidth="200" SelectedIndex="{Binding ViewModel.CurrentApplicationTheme, Converter={StaticResource ThemeToIndexConverter}, Mode=TwoWay}">
+            <ComboBox Grid.Column="1" MinWidth="200" SelectedIndex="{Binding ViewModel.GlobalConfig.ApplicationTheme, Converter={StaticResource ThemeToIndexConverter}, Mode=TwoWay}">
                 <ComboBoxItem Content="Light" />
                 <ComboBoxItem Content="Dark" />
                 <ComboBoxItem Content="High Contrast" />
             </ComboBox>
         </ui:CardControl>
-
+        <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=Folder24}">
+            <ui:CardControl.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="用户数据存储路径" />
+                    <ui:TextBlock
+                        Grid.Row="1"
+                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding ViewModel.GlobalConfig.UserDataPath, Converter={StaticResource AbsulutePathConverter}}"
+                        TextWrapping="WrapWithOverflow" />
+                </Grid>
+            </ui:CardControl.Header>
+            <WrapPanel>
+                <ui:Button Margin="10,0,0,0" Command="{Binding ViewModel.OpenUserDataPathCommand}">打开目录</ui:Button>
+                <ui:Button Margin="10,0,0,0" Command="{Binding ViewModel.SelectUserDataPathCommand}">选择路径</ui:Button>
+                <ui:Button Margin="10,0,0,0" Command="{Binding ViewModel.UseDefaultUserDataPathCommand}">恢复默认</ui:Button>
+            </WrapPanel>
+        </ui:CardControl>
         <ui:TextBlock Margin="0,24,0,0" FontTypography="BodyStrong" Text="About" />
 
-        <ui:CardExpander ContentPadding="0" Icon="{ui:ImageIcon 'pack://application:,,,/Assets/clip.ico', Width=40, Height=40}">
+        <ui:CardExpander ContentPadding="0" Icon="{ui:ImageIcon 'pack://application:,,,/Assets/clip.png', Width=40, Height=40}">
             <ui:CardExpander.Header>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -70,32 +90,6 @@
                 </Grid>
             </ui:CardExpander.Header>
             <StackPanel>
-                <Grid Margin="16">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="To clone this repository" />
-                    <TextBlock Grid.Column="1" Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="git clone https://github.com/ceastld/BetterClip.git" />
-                </Grid>
-                <ui:Anchor
-                    Margin="0"
-                    Padding="16"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    Background="Transparent"
-                    BorderThickness="0,1,0,0"
-                    CornerRadius="0"
-                    NavigateUri="https://github.com/ceastld/BetterClip/issues/new/choose">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="File a bug or request a new sample" />
-                        <ui:SymbolIcon Grid.Column="1" Symbol="Link24" />
-                    </Grid>
-                </ui:Anchor>
                 <ui:Anchor
                     Margin="0"
                     Padding="16"
@@ -110,10 +104,36 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Check out the docs" />
+                        <TextBlock Grid.Column="0" Text="软件使用文档" />
                         <ui:SymbolIcon Grid.Column="1" Symbol="Link24" />
                     </Grid>
                 </ui:Anchor>
+                <ui:Anchor
+                    Margin="0"
+                    Padding="16"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    Background="Transparent"
+                    BorderThickness="0,1,0,0"
+                    CornerRadius="0"
+                    NavigateUri="https://github.com/ceastld/BetterClip/issues/new/choose">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="问题反馈 &amp; 提出需求" />
+                        <ui:SymbolIcon Grid.Column="1" Symbol="Link24" />
+                    </Grid>
+                </ui:Anchor>
+                <Grid Margin="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="GitHub 仓库地址" />
+                    <TextBlock Grid.Column="1" Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="git clone https://github.com/ceastld/BetterClip.git" />
+                </Grid>
                 <TextBlock Margin="16" Text="{Binding ViewModel.AppVersion, Mode=OneWay}" />
             </StackPanel>
         </ui:CardExpander>

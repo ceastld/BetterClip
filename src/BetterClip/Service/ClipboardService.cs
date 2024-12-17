@@ -1,6 +1,5 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using BetterClip.Extension;
 using BetterClip.Service.Interface;
 using BetterClip.Win32;
 using Wpf.Ui;

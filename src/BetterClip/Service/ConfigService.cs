@@ -1,17 +1,22 @@
 ﻿using BetterClip.Core.Config;
+using BetterClip.Extension;
+using BetterClip.Helpers;
 using BetterClip.Service.Interface;
+using Microsoft.Extensions.Logging;
 using System.IO;
+using System.Reactive.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Wpf.Ui.Appearance;
 
 namespace BetterClip.Service;
 
-public class ConfigService : IConfigService
+public class ConfigService
 {
-    private readonly object _locker = new(); // 只有UI线程会调用这个方法，lock好像意义不大，而且浪费了下面的读写锁hhh
-    private readonly ReaderWriterLockSlim _rwLock = new();
+    private static readonly string _configPath = Global.Absolute("manifest.json");
+    private static ILogger _logger = App.GetLogger<Global>();
 
-    public static readonly JsonSerializerOptions JsonOptions = new()
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
         NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -21,90 +26,51 @@ public class ConfigService : IConfigService
         ReadCommentHandling = JsonCommentHandling.Skip,
     };
 
-    /// <summary>
-    /// 写入只有UI线程会调用
-    /// 多线程只会读，放心用static，不会丢失数据
-    /// </summary>
-    public static AllConfig? Config { get; private set; }
-
-    public AllConfig Get()
+    public ConfigService()
     {
-        lock (_locker)
-        {
-            if (Config == null)
+        GlobalConfig.ObserveChange().Throttle(TimeSpan.FromMilliseconds(100))
+            .Subscribe(c =>
             {
-                Config = Read();
-                Config.OnAnyChangedAction = Save; // 略微影响性能
-                Config.InitEvent();
-            }
+                _logger.LogInformation("Global Config Changed, Property: {0}", c.PropertyName);
+                CommonHelper.SaveObjectToJsonFile(_configPath, GlobalConfig, JsonOptions);
+            });
+        GlobalConfig.ObserveChange()
+            .Where(c => c.PropertyName == nameof(GlobalConfig.ApplicationTheme))
+            .Subscribe(c => ApplyTheme());
+        ApplicationThemeManager.Changed += (theme, color) => { GlobalConfig.ApplicationTheme = theme; };
 
-            return Config;
-        }
+    }
+    public void ApplyTheme() => ApplicationThemeManager.Apply(GlobalConfig.ApplicationTheme);
+
+    public GlobalConfig GlobalConfig { get; } = CommonHelper.ObjectFromJsonFile<GlobalConfig>(_configPath, JsonOptions);
+    public void UpdateUserDataPath(string path)
+    {
+        GlobalConfig.UserDataPath = Global.Relative(path);
+    }
+    public static string CreateSubFolder(string parentDir, params string[] subFolderName)
+    {
+        var subFolderPath = Path.Combine([parentDir, .. subFolderName]);
+        Directory.CreateDirectory(subFolderPath);
+        return subFolderPath;
     }
 
-    public void Save()
+    public string CreateSubDataFolder(params string[] subFolderName)
     {
-        if (Config != null)
-        {
-            Write(Config);
-        }
+        return CreateSubFolder(UserDataPath(), subFolderName);
     }
-
-    public AllConfig Read()
+    public string UserDataPath(params string[] relativePath)
     {
-        _rwLock.EnterReadLock();
-        try
+        var userdataPath = GlobalConfig.UserDataPath.TrimEnd('\\', '/');
+        _logger.LogInformation("UserDataPath: {0}", userdataPath);
+        if (!Path.IsPathRooted(userdataPath))
         {
-            var filePath = Global.Absolute(@"User/config.json");
-            if (!File.Exists(filePath))
-            {
-                return new AllConfig();
-            }
-
-            var json = File.ReadAllText(filePath);
-            var config = JsonSerializer.Deserialize<AllConfig>(json, JsonOptions);
-            if (config == null)
-            {
-                return new AllConfig();
-            }
-
-            Config = config;
-            return config;
+            userdataPath = Global.Absolute(userdataPath);
         }
-        catch (Exception e)
+        if (Path.GetFileName(userdataPath) != "UserData") // 最后一级目录不是 UserData
         {
-            Console.WriteLine(e.Message);
-            Console.WriteLine(e.StackTrace);
-            return new AllConfig();
+            userdataPath = Path.Combine(userdataPath, "UserData");
         }
-        finally
-        {
-            _rwLock.ExitReadLock();
-        }
-    }
-
-    public void Write(AllConfig config)
-    {
-        _rwLock.EnterWriteLock();
-        try
-        {
-            var path = Global.Absolute("User");
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            var file = Path.Combine(path, "config.json");
-            File.WriteAllText(file, JsonSerializer.Serialize(config, JsonOptions));
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            Console.WriteLine(e.StackTrace);
-        }
-        finally
-        {
-            _rwLock.ExitWriteLock();
-        }
+        Directory.CreateDirectory(userdataPath);
+        return Path.Combine([userdataPath, .. relativePath]);
     }
 }

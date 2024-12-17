@@ -1,8 +1,7 @@
-﻿using System.IO;
-using DynamicData;
+﻿using DynamicData;
 using System.Reactive.Linq;
-using BetterClip.Extension;
 using System.Collections.Concurrent;
+using ReactiveUI;
 
 namespace BetterClip.Service;
 
@@ -13,7 +12,8 @@ public abstract class FileSourceCache<TObject, TKey> : IDisposable where TObject
     protected readonly FileSystemWatcher _fileWatcher;
     protected readonly string _dir;
     protected readonly string _filter;
-    private readonly ConcurrentDictionary<string, DateTime> _fileUpdateTime = new();
+    private readonly ConcurrentDictionary<string, DateTime> _lastFileUpdateTime = new();
+    private readonly ConcurrentDictionary<TKey, DateTime> _lastObjectUpdateTime = new();
     protected FileSourceCache(string dir, string filter, int delayms = 200)
     {
         _cache = new(Object2Key);
@@ -24,6 +24,7 @@ public abstract class FileSourceCache<TObject, TKey> : IDisposable where TObject
             if (obj != null)
             {
                 objects.Add(obj);
+                _lastObjectUpdateTime[Object2Key(obj)] = Object2UpdateTime(obj);
             }
         }
 
@@ -44,24 +45,22 @@ public abstract class FileSourceCache<TObject, TKey> : IDisposable where TObject
             .Merge(watcher.Renamed)
             .Delay(TimeSpan.FromMilliseconds(delayms))
             .ObserveOnDispatcher()
-            .Subscribe(change => UpdateObject(change.FullPath));
+            .Subscribe(change => UpdateFile2Object(change.FullPath));
 
         watcher.Renamed
             .Delay(TimeSpan.FromMilliseconds(delayms))
             .ObserveOnDispatcher()
-            .Subscribe(change => UpdateObject(change.OldFullPath));
+            .Subscribe(change => UpdateFile2Object(change.OldFullPath));
 
         watcher.Start();
 
         var changer = _cache.Connect().Skip(objects.Count > 0 ? 1 : 0);
 
-        changer.WhereReasonsAre(ChangeReason.Add, ChangeReason.Update)
-               .ForEachChange(change => AddOrUpdateFile(change.Current))
+        changer.WhereReasonsAre(ChangeReason.Add, ChangeReason.Update, ChangeReason.Remove)
+               .ForEachChange(change => UpdateObject2File(change.Current))
                .Subscribe();
 
-        changer.WhereReasonsAre(ChangeReason.Remove)
-               .ForEachChange(change => RemoveFile(change.Current))
-               .Subscribe();
+        //changer.WhereReasonsAre(ChangeReason.Remove).ForEachChange(change => RemoveFile(change.Current)).Subscribe();
     }
     protected abstract TKey Object2Key(TObject obj);
     private string Object2File(TObject obj) => KeyToFile(Object2Key(obj));
@@ -69,45 +68,59 @@ public abstract class FileSourceCache<TObject, TKey> : IDisposable where TObject
     protected abstract string KeyToFile(TKey key);
     protected abstract TKey File2Key(string file);
     protected abstract void SaveObject2File(TObject obj, string file);
-
-    private void UpdateObject(string file)
+    protected abstract DateTime Object2UpdateTime(TObject obj);
+    private void UpdateFile2Object(string file)
     {
-        if (File.Exists(file))
+        if (File.Exists(file)) // add or update
         {
-            if (!CheckSync(file, out var update_time))
+            if (!CheckFileSync(file, out var update_time))
             {
-                _fileUpdateTime[file] = update_time;
+                _lastFileUpdateTime[file] = update_time;
                 var obj = File2Object(file);
                 if (obj != null)
+                {
                     _cache.AddOrUpdate(obj);
+                    _lastObjectUpdateTime[Object2Key(obj)] = Object2UpdateTime(obj);
+                }
             }
         }
-        else
+        else // delete
         {
-            _cache.Remove(File2Key(file));
+            var key = File2Key(file);
+            _cache.Remove(key);
+            _lastObjectUpdateTime.TryRemove(key, out _);
         }
     }
-    private bool CheckSync(string file, out DateTime new_time)
+    private bool CheckFileSync(string file, out DateTime new_time)
     {
         new_time = new FileInfo(file).LastWriteTime;
-        return _fileUpdateTime.TryGetValue(file, out var last_time) && last_time == new_time;
+        return _lastFileUpdateTime.TryGetValue(file, out var last_time) && last_time == new_time;
     }
-    private void AddOrUpdateFile(TObject obj)
+
+    private void UpdateObject2File(TObject obj)
     {
-        var file = Object2File(obj);
-        if (!CheckSync(file, out _))
+        if (_cache.Lookup(Object2Key(obj)).HasValue) // add or update 
         {
-            SaveObject2File(obj, file);
-            _fileUpdateTime[file] = new FileInfo(file).LastWriteTime;
+            if (_lastObjectUpdateTime.TryGetValue(Object2Key(obj), out var last_time)
+                && last_time == Object2UpdateTime(obj)) { return; }
+
+            _lastObjectUpdateTime[Object2Key(obj)] = Object2UpdateTime(obj);
+
+            { // write file
+                var file = Object2File(obj);
+                SaveObject2File(obj, file);
+                _lastFileUpdateTime[file] = new FileInfo(file).LastWriteTime;
+            }
         }
-    }
-    private void RemoveFile(TObject obj)
-    {
-        var file = Object2File(obj);
-        _fileUpdateTime.TryRemove(file, out _);
-        if (File.Exists(file))
+        else // delete
         {
-            File.Delete(file);
+            var file = Object2File(obj);
+            _lastFileUpdateTime.TryRemove(file, out _);
+            _lastObjectUpdateTime.TryRemove(Object2Key(obj), out _);
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
         }
     }
 

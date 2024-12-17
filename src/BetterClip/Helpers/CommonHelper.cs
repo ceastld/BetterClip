@@ -1,13 +1,20 @@
-﻿using System;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
-using System.Windows.Threading;
+using BetterClip.View.Windows;
+using BetterClip.ViewModel.Editor;
 
 namespace BetterClip.Helpers;
 
 public static class CommonHelper
 {
-    public static TObject ObjectFromJsonFile<TObject>(string path, Func<TObject> defaultFunc, JsonSerializerOptions? options = null)
+    public static void SaveObjectToJsonFile<TObject>(string path, TObject obj, JsonSerializerOptions? options = null)
+    {
+        var jsonString = JsonSerializer.Serialize(obj, options);
+        File.WriteAllText(path, jsonString);
+    }
+    public static TObject ObjectFromJsonFile<TObject>(string path, JsonSerializerOptions? options = null, Func<TObject>? defaultFunc = null)
+        where TObject : class, new()
     {
         TObject? ret = default;
         if (File.Exists(path))
@@ -19,6 +26,36 @@ public static class CommonHelper
             }
             catch { }
         }
-        return ret ?? defaultFunc.Invoke();
+        return ret ?? defaultFunc?.Invoke() ?? new TObject();
+    }
+
+    public static void OpenFileOrUrl(string url)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    public static string EditText(string inputText, object? owner = null)
+    {
+        var vm = new MonacoEditorViewModel
+        {
+            Text = inputText
+        };
+        var window = new MonacoWindow(vm)
+        {
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+        if(owner is DependencyObject d && Window.GetWindow(d) is Window ow)
+        {
+            window.Owner = ow;
+        }
+        window.ShowDialog();
+        return vm.Text;
     }
 }

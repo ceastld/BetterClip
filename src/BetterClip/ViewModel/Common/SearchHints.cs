@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using DynamicData.Binding;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using ReactiveUI;
 
 namespace BetterClip.ViewModel.Common;
 
@@ -31,7 +32,7 @@ public partial class SearchHints : ObservableObject, IDisposable
 
         var loader = title.Or(description)
             .Filter(filter)     //filter strings
-            .ObserveOn(SynchronizationContext.Current!)
+            .ObserveOn(RxApp.MainThreadScheduler)
             .SortAndBind(out _hints, SortExpressionComparer<string>.Ascending(str => str))
             .Subscribe();
 

@@ -2,7 +2,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:BetterClip.ViewModel.Common"
+    xmlns:local="clr-namespace:BetterClip.View.Controls"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <local:FavorDropHandler x:Key="FavorDropHandler" />
+    <DataTemplate DataType="{x:Type common:CommonItemViewModel}">
+        <ui:TextBlock Text="{Binding Title}" />
+    </DataTemplate>
+    <HierarchicalDataTemplate DataType="{x:Type common:FolderItemViewModel}" ItemsSource="{Binding Children}">
+        <TextBlock Text="{Binding Title}" />
+        <!--<ContentPresenter Content="{Binding}" />-->
+    </HierarchicalDataTemplate>
     <DataTemplate DataType="{x:Type common:TextItemViewModel}">
         <ui:TextBlock
             MaxHeight="80"

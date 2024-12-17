@@ -21,8 +21,8 @@ namespace BetterClip.View.Clip
     /// </summary>
     public partial class ClipItemEditor : UserControl
     {
-        public ClipItemViewModel ViewModel { get; set; }
-        public ClipItemEditor(ClipItemViewModel viewModel)
+        public CommonItemViewModel ViewModel { get; set; }
+        public ClipItemEditor(CommonItemViewModel viewModel)
         {
             ViewModel = viewModel;
             InitializeComponent();

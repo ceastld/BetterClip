@@ -1,5 +1,9 @@
-﻿using DynamicData;
+﻿using System.Collections.ObjectModel;
 using System.Reactive.Linq;
+using System.Text.Json;
+using DynamicData;
+using DynamicData.Binding;
+using ReactiveUI;
 
 namespace ConsoleApp1;
 
@@ -7,28 +11,35 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        
-        // 初始化 ObservableCache
-        var folderPath = @"D:\work\dotnet\BetterClip\src\BetterClip\bin\Debug\net8.0-windows\ClipData\Items";
-        var cache = new JsonFileSystemCache(folderPath);
-
-        cache.SourceCache.Connect()
-            .ForEachChange(change =>
-            {
-                if (change.Reason == ChangeReason.Add)
-                    Console.WriteLine($"File added: {change.Key}");
-                else if (change.Reason == ChangeReason.Remove)
-                    Console.WriteLine($"File removed: {change.Key}");
-            })
-            .Subscribe();
-
-        // 保持程序运行以监听文件变化
-        Console.WriteLine("Press any key to exit...");
-        while (true)
+        // 使用 Connect 将 listA 和 listB 双向绑定
+        //.Do(change => Console.WriteLine($"Change detected: {change}"))
+        var obj = new
         {
-            Console.ReadLine();
-            var path = Path.Combine(folderPath, $"{Guid.NewGuid()}.json");
-            cache.SourceCache.AddOrUpdate(new FileContent(path, CommonHelper.GenerateRandomString()));
+            listA = new ObservableCollectionExtended<int>(),
+            listB = new ObservableCollectionExtended<int>()
+        };
+        obj.listA.ObserveCollectionChanges()
+            .BindTo(obj, x=>x.listB);
+        //listB.ObserveCollectionChanges().BindTo(listA, x => x);
+        // 添加测试数据
+        obj.listA.AddRange([1, 2, 3]);
+
+        // 打印 listB 的内容以验证同步
+        Console.WriteLine("ListB contents:");
+        foreach (var item in obj.listB)
+        {
+            Console.WriteLine(item);
+        }
+
+        //修改 listB 的内容以验证双向同步
+        obj.listB.Add(4);
+        obj.listB.Remove(1);
+
+        // 打印 listA 的内容以验证同步
+        Console.WriteLine("ListA contents:");
+        foreach (var item in obj.listA)
+        {
+            Console.WriteLine(item);
         }
     }
 }

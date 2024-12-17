@@ -28,6 +28,18 @@ namespace BetterClip.ViewModel.Windows
                 Content = "Clip",
                 Icon = new SymbolIcon{Symbol = SymbolRegular.Clipboard24},
                 TargetPageType = typeof(View.Pages.ClipPage)
+            },
+            new NavigationViewItem()
+            {
+                Content = "Favor",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Star24 },
+                TargetPageType = typeof(View.Pages.FavorPage)
+            },
+            new NavigationViewItem()
+            {
+                Content = "Logging",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Info24 },
+                TargetPageType = typeof(View.Pages.LoggingPage)
             }
         };
 

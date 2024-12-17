@@ -12,4 +12,5 @@
     <converters:TextMinimizeIndentConverter x:Key="TextMinimizeIndentConverter" />
     <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
     <converters:QualityConverter x:Key="QualityConverter" />
+    <converters:AbsulutePathConverter x:Key="AbsulutePathConverter" />
 </ResourceDictionary>

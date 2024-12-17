@@ -3,16 +3,17 @@ using BetterClip.View.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Wpf.Ui;
+using Wpf.Ui.Appearance;
 
 namespace BetterClip.Service
 {
     /// <summary>
     /// Managed host of the application.
     /// </summary>
-    public class ApplicationHostService(IServiceProvider serviceProvider) : IHostedService
+    public class ApplicationHostService(IServiceProvider serviceProvider, ConfigService configService) : IHostedService
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
-
+        private readonly ConfigService _configService = configService;
         private INavigationWindow _navigationWindow = default!;
 
         /// <summary>
@@ -45,6 +46,9 @@ namespace BetterClip.Service
                 _navigationWindow = (
                     _serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow
                 )!;
+
+                ApplicationThemeManager.Apply(_configService.GlobalConfig.ApplicationTheme);
+
                 _navigationWindow!.ShowWindow();
 
                 _navigationWindow.Navigate(NavagatePageType);
