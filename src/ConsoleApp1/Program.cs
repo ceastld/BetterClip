@@ -1,45 +1,50 @@
-﻿using System.Collections.ObjectModel;
-using System.Reactive.Linq;
-using System.Text.Json;
-using DynamicData;
-using DynamicData.Binding;
-using ReactiveUI;
+﻿using System.Text.RegularExpressions;
 
 namespace ConsoleApp1;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static string DetectLanguage(string code)
     {
-        // 使用 Connect 将 listA 和 listB 双向绑定
-        //.Do(change => Console.WriteLine($"Change detected: {change}"))
-        var obj = new
+        // 定义一个字典，将语言与正则表达式进行匹配
+        var patterns = new List<Tuple<string, string>>()
         {
-            listA = new ObservableCollectionExtended<int>(),
-            listB = new ObservableCollectionExtended<int>()
+            // JavaScript 正则
+            new("JavaScript", @"\b(function|let|var|const|console\.log|=>|class)\b"),
+            // C# 正则
+            new("Csharp", @"\b(public\s+class|using|void|namespace)\b"),
+            // Python 正则
+            new("Python", @"\b(def|import|print|class|self)\b"),
         };
-        obj.listA.ObserveCollectionChanges()
-            .BindTo(obj, x=>x.listB);
-        //listB.ObserveCollectionChanges().BindTo(listA, x => x);
-        // 添加测试数据
-        obj.listA.AddRange([1, 2, 3]);
 
-        // 打印 listB 的内容以验证同步
-        Console.WriteLine("ListB contents:");
-        foreach (var item in obj.listB)
+        // 使用 foreach 循环进行匹配
+        foreach (var pattern in patterns)
         {
-            Console.WriteLine(item);
+            // 如果匹配成功，则返回对应的语言
+            if (Regex.IsMatch(code, pattern.Item2))
+            {
+                return pattern.Item1;
+            }
         }
 
-        //修改 listB 的内容以验证双向同步
-        obj.listB.Add(4);
-        obj.listB.Remove(1);
+        // 如果没有匹配，返回 Unknown
+        return "Unknown";
+    }
 
-        // 打印 listA 的内容以验证同步
-        Console.WriteLine("ListA contents:");
-        foreach (var item in obj.listA)
-        {
-            Console.WriteLine(item);
-        }
+    public static void Main()
+    {
+        string jsCode = "function sayHello() { console.log('Hello, world!'); }";
+        string csharpCode = "public class Program { public static void Main() { } }";
+        string pythonCode = "def greet():\n    print('Hello, world!')";
+        string cppCode = "#include <iostream>\nclass MyClass { public: void greet() {} };";
+        string rubyCode = "def greet\n  puts 'Hello, world!'\nend";
+        string javaCode = "public class Main { public static void main(String[] args) {} }";
+
+        Console.WriteLine("Detected Language (JS): " + DetectLanguage(jsCode));   // Output: JavaScript
+        Console.WriteLine("Detected Language (C#): " + DetectLanguage(csharpCode)); // Output: C#
+        Console.WriteLine("Detected Language (Python): " + DetectLanguage(pythonCode)); // Output: Python
+        Console.WriteLine("Detected Language (C++): " + DetectLanguage(cppCode)); // Output: C++
+        Console.WriteLine("Detected Language (Ruby): " + DetectLanguage(rubyCode)); // Output: Ruby
+        Console.WriteLine("Detected Language (Java): " + DetectLanguage(javaCode)); // Output: Java
     }
 }
