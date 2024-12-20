@@ -1,3 +1,5 @@
+const TEXT_THROTTLE_DELAY = 500;
+
 class MonacoEditorManager {
     constructor() {
         this.monacoEditor = null;
@@ -8,16 +10,37 @@ class MonacoEditorManager {
         this.defineTheme();
     }
 
+    throttle(func, wait) {
+        let lastTime = 0;
+
+        return function (...args) {
+            const now = Date.now();
+            if (now - lastTime >= wait) {
+                func(...args);
+                lastTime = now;
+            }
+        };
+    }
+
+    textChanged = this.throttle(() => {
+        this.webviewPostMessage('textChanged', this.getText());
+    }, TEXT_THROTTLE_DELAY);
+
+    textChangedOriginal = this.throttle(() => {
+        this.webviewPostMessage('originalTextChanged', this.getOriginalText());
+    }, TEXT_THROTTLE_DELAY);
+
+    textChangedModified = this.throttle(() => {
+        this.webviewPostMessage('modifiedTextChanged', this.getModifiedText());
+    }, TEXT_THROTTLE_DELAY);
+
     createEditor(text = this.defaultText, language = 'javascript') {
         this.monacoEditor = monaco.editor.create(document.getElementById('container'), {
             value: text,
             language: language,
             automaticLayout: true
         });
-
-        this.monacoEditor.onDidChangeModelContent(() => {
-            this.webviewPostMessage('textChanged', this.getText());
-        });
+        this.monacoEditor.onDidChangeModelContent(this.textChanged);
     }
 
     createDiffEditor(text1 = this.defaultText1, text2 = this.defaultText2, language = 'javascript') {
@@ -30,14 +53,8 @@ class MonacoEditorManager {
             original: monaco.editor.createModel(text1, language),
             modified: monaco.editor.createModel(text2, language)
         });
-
-        this.monacoDiffEditor.getOriginalEditor().onDidChangeModelContent(() => {
-            this.webviewPostMessage('originalTextChanged');
-        });
-
-        this.monacoDiffEditor.getModifiedEditor().onDidChangeModelContent(() => {
-            this.webviewPostMessage('modifiedTextChanged');
-        });
+        this.monacoDiffEditor.getOriginalEditor().onDidChangeModelContent(this.textChangedOriginal);
+        this.monacoDiffEditor.getModifiedEditor().onDidChangeModelContent(this.textChangedModified);
     }
 
     getText() { return this.monacoEditor ? this.monacoEditor.getValue() : null; }
@@ -46,14 +63,13 @@ class MonacoEditorManager {
     setText(text) { if (this.monacoEditor) { this.monacoEditor.setValue(text); } }
     setOriginalText(text) { if (this.monacoDiffEditor) { this.monacoDiffEditor.getOriginalEditor().setValue(text); } }
     setModifiedText(text) { if (this.monacoDiffEditor) { this.monacoDiffEditor.getModifiedEditor().setValue(text); } }
-    
+
     webviewPostMessage(msgType, data = null) {
         if (window.chrome && window.chrome.webview) {
-            window.chrome.webview.postMessage(JSON.stringify(
-                {
-                    type: msgType,
-                    data: data
-                }));
+            window.chrome.webview.postMessage({
+                type: msgType,
+                data: data
+            });
         } else {
             console.warn('webview is not available');
         }
@@ -70,7 +86,7 @@ class MonacoEditorManager {
     defineTheme() {
         monaco.editor.defineTheme('unknown', { base: 'vs', inherit: true })
         monaco.editor.defineTheme('light', {
-            base: 'vs-dark',
+            base: 'vs',
             inherit: true,
             rules: [{ background: 'FFFFFF00' }],
             colors: {
@@ -112,13 +128,23 @@ class MonacoEditorManager {
     setTheme(theme) {
         monaco.editor.setTheme(theme);
     }
+
+    setWordWrap(wordWrap) {
+        if (this.monacoEditor) {
+            this.monacoEditor.updateOptions({ wordWrap: wordWrap });
+        } else if (this.monacoDiffEditor) {
+            this.monacoDiffEditor.updateOptions({ wordWrap: wordWrap });
+        }
+    }
 }
 
 // Usage
 const editor = new MonacoEditorManager();
-// Uncomment the desired editor to use
-editor.createEditor();
-// editorManager.createDiffEditor();
 
-// editorManager.setTheme('vs');
-editor.setLanguage('javascript');
+function test1() {
+    // Uncomment the desired editor to use
+    // editor.createDiffEditor();
+    editor.createEditor();
+    editor.setLanguage('json');
+    editor.setTheme('vs');
+}

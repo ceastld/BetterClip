@@ -17,23 +17,28 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=Info24}">
-            <ui:CardControl.Header>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="日志文件路径" />
-                    <ui:TextBlock
-                        Grid.Row="1"
-                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                        Text="{Binding ViewModel.LogFilePath}"
-                        TextWrapping="WrapWithOverflow" />
-                </Grid>
-            </ui:CardControl.Header>
-            <ui:Button HorizontalAlignment="Stretch" Command="{Binding ViewModel.OpenCurrentLogCommand}">打开文件</ui:Button>
-        </ui:CardControl>
+        <StackPanel>
+            <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=Info24}">
+                <ui:CardControl.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="日志文件路径" />
+                        <ui:TextBlock
+                            Grid.Row="1"
+                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{Binding ViewModel.LogFilePath}"
+                            TextWrapping="WrapWithOverflow" />
+                    </Grid>
+                </ui:CardControl.Header>
+                <ui:Button HorizontalAlignment="Stretch" Command="{Binding ViewModel.OpenCurrentLogCommand}">打开文件</ui:Button>
+            </ui:CardControl>
+            <WrapPanel Margin="0,0,0,12">
+                <ui:Button Command="{Binding ViewModel.OpenLastClosedFolderCommand}">文件夹重开</ui:Button>
+            </WrapPanel>
+        </StackPanel>
         <RichTextBox
             x:Name="LogTextBox"
             Grid.Row="1"

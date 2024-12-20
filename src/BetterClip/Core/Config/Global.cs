@@ -28,6 +28,10 @@ public class Global
     {
         return Directory.CreateDirectory(Absolute(subFolderName)).FullName;
     }
+    public static string CreateLocalFolder(params string[] subFolderName)
+    {
+        return Directory.CreateDirectory(Absolute(["Local", .. subFolderName])).FullName;
+    }
 
     public static string Absolute(params string[] relativePath)
     {

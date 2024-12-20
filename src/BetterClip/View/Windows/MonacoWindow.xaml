@@ -31,69 +31,79 @@
 
         <!--  Title="WPF UI - Monaco Editor (Visual Studio Code)"  -->
         <ui:TitleBar Title="Monaco Editor" Grid.Row="0" Icon="/Assets/clip.png" />
-
-        <Menu
-            Grid.Row="1"
-            Margin="0"
-            Background="Transparent"
-            FontSize="14">
-            <ui:MenuItem Header="File" Icon="{ui:SymbolIcon DocumentSplitHint20}">
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="newFile" Header="New" />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="newWindow" Header="New window" />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="openFile" Header="Open..." />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="saveFile" Header="Save" />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="saveFileAs" Header="Save As..." />
+        <WrapPanel Grid.Row="1">
+            <Menu
+                Grid.Row="1"
+                Margin="0"
+                Background="Transparent"
+                FontSize="14">
+                <ui:MenuItem Header="File" Icon="{ui:SymbolIcon DocumentSplitHint20}">
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="newFile" Header="New" />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="newWindow" Header="New window" />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="openFile" Header="Open..." />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="saveFile" Header="Save" />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="saveFileAs" Header="Save As..." />
+                    <Separator />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="exit" Header="Exit" />
+                </ui:MenuItem>
+                <ui:MenuItem Header="Debug" Icon="{ui:SymbolIcon DeveloperBoard24}">
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="editUndo" Header="Undo" />
+                    <Separator />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="editCut" Header="Cut" />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="editCopy" Header="Copy" />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="editPaste" Header="Paste" />
+                    <MenuItem
+                        Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}"
+                        CommandParameter="editDelete"
+                        Header="Delete"
+                        IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="browserSearch" Header="Search with browser" />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="find" Header="Find..." />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="findNext" Header="Find next" />
+                    <Separator />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="selectAll" Header="Select All" />
+                </ui:MenuItem>
                 <Separator />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="exit" Header="Exit" />
-            </ui:MenuItem>
-            <ui:MenuItem Header="Debug" Icon="{ui:SymbolIcon DeveloperBoard24}">
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="editUndo" Header="Undo" />
-                <Separator />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="editCut" Header="Cut" />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="editCopy" Header="Copy" />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="editPaste" Header="Paste" />
-                <MenuItem
+                <ui:MenuItem
                     Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}"
-                    CommandParameter="editDelete"
-                    Header="Delete"
-                    IsEnabled="False" />
+                    CommandParameter="hotReload"
+                    Foreground="{DynamicResource PaletteDeepOrangeBrush}"
+                    Icon="{ui:SymbolIcon Fire24,
+                                         True}" />
+                <ui:MenuItem
+                    Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}"
+                    CommandParameter="build"
+                    Foreground="{DynamicResource PaletteGreenBrush}"
+                    Icon="{ui:SymbolIcon Play24}" />
+                <ui:MenuItem
+                    Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}"
+                    CommandParameter="build"
+                    Foreground="{DynamicResource PaletteRedBrush}"
+                    Icon="{ui:SymbolIcon Stop24}" />
+                <ui:MenuItem
+                    Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}"
+                    CommandParameter="build"
+                    Foreground="{DynamicResource PaletteLightBlueBrush}"
+                    Icon="{ui:SymbolIcon ArrowClockwise24}" />
                 <Separator />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="browserSearch" Header="Search with browser" />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="find" Header="Find..." />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="findNext" Header="Find next" />
-                <Separator />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="selectAll" Header="Select All" />
-            </ui:MenuItem>
-            <Separator />
-            <ui:MenuItem
-                Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}"
-                CommandParameter="hotReload"
-                Foreground="{DynamicResource PaletteDeepOrangeBrush}"
-                Icon="{ui:SymbolIcon Fire24,
-                                     True}" />
-            <ui:MenuItem
-                Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}"
-                CommandParameter="build"
-                Foreground="{DynamicResource PaletteGreenBrush}"
-                Icon="{ui:SymbolIcon Play24}" />
-            <ui:MenuItem
-                Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}"
-                CommandParameter="build"
-                Foreground="{DynamicResource PaletteRedBrush}"
-                Icon="{ui:SymbolIcon Stop24}" />
-            <ui:MenuItem
-                Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}"
-                CommandParameter="build"
-                Foreground="{DynamicResource PaletteLightBlueBrush}"
-                Icon="{ui:SymbolIcon ArrowClockwise24}" />
-            <Separator />
-            <ui:MenuItem Header="Help" Icon="{ui:SymbolIcon ChatHelp20}">
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="viewHelp" Header="View help" />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="viewFeedback" Header="Send feedback" />
-                <Separator />
-                <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="viewAbout" Header="About WPF UI" />
-            </ui:MenuItem>
-        </Menu>
+                <ui:MenuItem Header="Help" Icon="{ui:SymbolIcon ChatHelp20}">
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="viewHelp" Header="View help" />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="viewFeedback" Header="Send feedback" />
+                    <Separator />
+                    <MenuItem Command="{Binding ViewModel.MenuActionCommand, Mode=OneWay}" CommandParameter="viewAbout" Header="About WPF UI" />
+                </ui:MenuItem>
+            </Menu>
+            <ui:ToggleSwitch Margin="5,0" Content="Word wrap" IsChecked="{Binding ViewModel.WordWrap}" />
+
+            <ComboBox
+                MinWidth="100"
+                Margin="5,0"
+                IsTextSearchCaseSensitive="False"
+                IsTextSearchEnabled="True"
+                ItemsSource="{Binding ViewModel.MonacoLanguages}"
+                SelectedItem="{Binding ViewModel.Language}" />
+        </WrapPanel>
 
         <ww2:WebView2
             x:Name="WebView"

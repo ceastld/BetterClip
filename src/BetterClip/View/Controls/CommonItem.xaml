@@ -3,7 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:BetterClip.ViewModel.Common"
     xmlns:local="clr-namespace:BetterClip.View.Controls"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:BetterClip.ViewModel"
+    xmlns:vmp="clr-namespace:BetterClip.ViewModel.Pages">
     <local:FavorDropHandler x:Key="FavorDropHandler" />
     <DataTemplate DataType="{x:Type common:CommonItemViewModel}">
         <ui:TextBlock Text="{Binding Title}" />
@@ -12,12 +14,20 @@
         <TextBlock Text="{Binding Title}" />
         <!--<ContentPresenter Content="{Binding}" />-->
     </HierarchicalDataTemplate>
+    <Style BasedOn="{StaticResource DefaultToolTipStyle}" TargetType="{x:Type ToolTip}">
+        <Setter Property="MaxWidth" Value="800" />
+        <Setter Property="Placement" Value="Left" />
+        <Setter Property="ToolTipService.InitialShowDelay" Value="500" />
+    </Style>
     <DataTemplate DataType="{x:Type common:TextItemViewModel}">
         <ui:TextBlock
             MaxHeight="80"
             Text="{Binding Text, Converter={StaticResource TextMinimizeIndentConverter}}"
             TextTrimming="CharacterEllipsis"
-            TextWrapping="WrapWithOverflow" />
+            TextWrapping="WrapWithOverflow"
+            ToolTip="{Binding Text}"
+            ToolTipService.InitialShowDelay="500"
+            ToolTipService.Placement="Left" />
         <!--<Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -45,7 +55,13 @@
             Source="{Binding Path}"
             Stretch="Uniform"
             StretchDirection="DownOnly"
-            UseLayoutRounding="True" />
+            UseLayoutRounding="True">
+            <ui:Image.ToolTip>
+                <ToolTip>
+                    <ui:Image Source="{Binding Path}" />
+                </ToolTip>
+            </ui:Image.ToolTip>
+        </ui:Image>
     </DataTemplate>
     <DataTemplate DataType="{x:Type common:FileItemViewModel}">
         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" IsEnabled="{Binding FilePath, Converter={StaticResource FilePathToExistsConverter}}">

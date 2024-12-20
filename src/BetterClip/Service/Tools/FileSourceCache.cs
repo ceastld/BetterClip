@@ -2,6 +2,7 @@
 using System.Reactive.Linq;
 using System.Collections.Concurrent;
 using ReactiveUI;
+using System.Reactive.Subjects;
 
 namespace BetterClip.Service;
 
@@ -69,6 +70,7 @@ public abstract class FileSourceCache<TObject, TKey> : IDisposable where TObject
     protected abstract TKey File2Key(string file);
     protected abstract void SaveObject2File(TObject obj, string file);
     protected abstract DateTime Object2UpdateTime(TObject obj);
+    public Subject<TObject> UpdateFromFile { get; } = new();
     private void UpdateFile2Object(string file)
     {
         if (File.Exists(file)) // add or update
@@ -81,6 +83,7 @@ public abstract class FileSourceCache<TObject, TKey> : IDisposable where TObject
                 {
                     _cache.AddOrUpdate(obj);
                     _lastObjectUpdateTime[Object2Key(obj)] = Object2UpdateTime(obj);
+                    UpdateFromFile.OnNext(obj);
                 }
             }
         }

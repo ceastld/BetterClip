@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Linq;
+using BetterClip.Helpers;
 using BetterClip.Model.ClipData;
 using BetterClip.Service.Interface;
 using BetterClip.ViewModel.Common;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace BetterClip.ViewModel.Pages;
 using static CommonItemHelper;
 
-public partial class FavorViewModel : ViewModel, IDisposable
+public partial class FavorViewModel : ViewModel
 {
     [ObservableProperty]
     private FolderItemViewModel? _root;
@@ -16,7 +17,7 @@ public partial class FavorViewModel : ViewModel, IDisposable
     {
         this.favorDataService = favorDataService;
         this.clipDataService = clipDataService;
-        Root = (FolderItemViewModel?)favorDataService.ViewModels.Lookup("").Value;
+        OnRefresh();
 
         favorDataService.ViewModels.WatchValue("")
             .Where(x => x != null)
@@ -77,6 +78,12 @@ public partial class FavorViewModel : ViewModel, IDisposable
     }
 
     [RelayCommand]
+    private void OnRefresh() => Root?.Refresh();
+
+    [RelayCommand]
+    private void OnOpenDataFolder() => CommonHelper.OpenFileOrUrl(favorDataService.DataFolder);
+
+    [RelayCommand]
     private void OnPaste()
     {
         var item = favorDataService.CreateFromClipboard();
@@ -109,10 +116,5 @@ public partial class FavorViewModel : ViewModel, IDisposable
         data.Add(folder);
 
         Root?.Children.AddRange(favorDataService.SelectViewModels(data));
-    }
-
-    public void Dispose()
-    {
-        throw new NotImplementedException();
     }
 }

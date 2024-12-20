@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using BetterClip.Model.Monaco;
 using BetterClip.View.Windows;
 using BetterClip.ViewModel.Editor;
 
@@ -51,11 +52,32 @@ public static class CommonHelper
         {
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
         };
-        if(owner is DependencyObject d && Window.GetWindow(d) is Window ow)
+        if (owner is DependencyObject d && Window.GetWindow(d) is Window ow)
         {
             window.Owner = ow;
         }
         window.ShowDialog();
         return vm.Text;
+    }
+
+    public static (string, string) CompareText(string text1, string text2, MonacoLanguage language = MonacoLanguage.None, object? owner = null)
+    {
+        var vm = new MonacoEditorViewModel
+        {
+            OriginalText = text1,
+            ModifiedText = text2,
+            Language = language,
+            DiffMode = true,
+        };
+        var window = new MonacoWindow(vm)
+        {
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+        if (owner is DependencyObject d && Window.GetWindow(d) is Window ow)
+        {
+            window.Owner = ow;
+        }
+        window.ShowDialog();
+        return (vm.OriginalText, vm.ModifiedText);
     }
 }

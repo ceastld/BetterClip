@@ -34,7 +34,7 @@ namespace BetterClip.Service
             await Task.CompletedTask;
         }
 
-        public static Type NavagatePageType { get; set; } = typeof(DashboardPage);
+        public static Type NavigatePageType { get; set; } = typeof(DashboardPage);
 
         /// <summary>
         /// Creates main window during activation.
@@ -51,7 +51,7 @@ namespace BetterClip.Service
 
                 _navigationWindow!.ShowWindow();
 
-                _navigationWindow.Navigate(NavagatePageType);
+                _navigationWindow.Navigate(NavigatePageType);
             }
 
             await Task.CompletedTask;

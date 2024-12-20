@@ -17,7 +17,7 @@ public abstract class JsonFileSourceCache<TObject>(string dir, int delayms = 200
             return default;
         }
     }
-    protected abstract TObject? Json2Object(string file);
+    protected abstract TObject? Json2Object(string json);
     protected override string KeyToFile(string key) => Path.Combine(_dir, key + ".json");
     protected override void SaveObject2File(TObject obj, string file) => File.WriteAllText(file, Object2Json(obj));
     protected abstract string Object2Json(TObject obj);

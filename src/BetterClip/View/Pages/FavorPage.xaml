@@ -21,8 +21,10 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <WrapPanel>
-            <ui:Button Margin="0,0,10,0" Command="{Binding ViewModel.AddTestItemCommand}">添加测试内容</ui:Button>
-            <ui:Button Margin="0,0,10,0" Command="{Binding ViewModel.PasteCommand}">粘贴剪贴板内容</ui:Button>
+            <ui:Button Margin="0,0,10,0" Command="{Binding ViewModel.AddTestItemCommand}" Icon="{ui:SymbolIcon Symbol=Add16}">添加测试内容</ui:Button>
+            <ui:Button Margin="0,0,10,0" Command="{Binding ViewModel.PasteCommand}" Icon="{ui:SymbolIcon Symbol=Clipboard16}">粘贴剪贴板内容</ui:Button>
+            <ui:Button Margin="0,0,10,0" Command="{Binding ViewModel.OpenDataFolderCommand}" Icon="{ui:SymbolIcon Symbol=Folder16}">打开数据文件夹</ui:Button>
+            <ui:Button Margin="0,0,10,0" Command="{Binding ViewModel.RefreshCommand}" Icon="{ui:SymbolIcon Symbol=ArrowClockwise16}">刷新</ui:Button>
             <ui:ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding ViewModel.IsMonitorClipboard}">监听剪贴板</ui:ToggleSwitch>
         </WrapPanel>
         <Grid Grid.Row="1">

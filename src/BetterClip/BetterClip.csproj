@@ -21,10 +21,13 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="DetectLanguage" Version="1.0.0" />
 		<PackageReference Include="DynamicData" Version="9.0.4" />
 		<PackageReference Include="gong-wpf-dragdrop" Version="4.0.0" />
 		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
+		<PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<!--<PackageReference Include="ReactiveUI.WPF" Version="20.1.63" />-->
 		<PackageReference Include="ReactiveUI" Version="20.1.63" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
@@ -52,6 +55,18 @@
 		<Content Include="Assets\Monaco\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <COMReference Include="SHDocVw">
+	    <VersionMinor>1</VersionMinor>
+	    <VersionMajor>1</VersionMajor>
+	    <Guid>eab22ac0-30c1-11cf-a7eb-0000c05bae0b</Guid>
+	    <Lcid>0</Lcid>
+	    <WrapperTool>tlbimp</WrapperTool>
+	    <Isolated>false</Isolated>
+	    <EmbedInteropTypes>true</EmbedInteropTypes>
+	  </COMReference>
 	</ItemGroup>
 
 	<ItemGroup>

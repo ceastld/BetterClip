@@ -49,6 +49,10 @@ public static class TextUtil
         double maxlen = Math.Max(s1.Length, s2.Length);
         return maxlen != 0 ? 1 - Levenshtein(s1, s2) / maxlen : 1;
     }
+    public static double Sim(this string[] s1, string s2)
+    {
+        return 0;
+    }
 
     /// <summary>
     /// 计算字符串s1和s2之间的Levenshtein编辑距离。
@@ -210,20 +214,21 @@ public static class TextUtil
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
-    public static string ToMD5(this object obj)
+    public static string ToMD5(this object obj, bool base62 = false)
     {
-        using MD5 md5 = MD5.Create();
         byte[] data = obj switch
         {
             string str => Encoding.UTF8.GetBytes(str),
             byte[] bytes => bytes,
             _ => throw new ArgumentException("Invalid object type")
         };
-        byte[] hash = md5.ComputeHash(data);
-        return hash.ToHexString();
+        byte[] hash = MD5.HashData(data);
+        return base62 ? hash.ToBase62() : hash.ToHexString();
     }
 
     public static string ToBase62(this Guid guid) => new BigInteger(guid.ToByteArray()).ToBase62();
+    public static string ToBase62(this byte[] @byte) => new BigInteger(@byte).ToBase62();
+
 
     public static string GetBase62Guid()
     {

@@ -35,7 +35,8 @@
             <!--<ui:Button Margin="5" Command="{Binding ViewModel.SaveCommand}">保存所有数据</ui:Button>-->
             <ui:Button Margin="5" Command="{Binding ViewModel.PasteCommand}">粘贴剪贴板内容</ui:Button>
             <ui:Button Margin="5" Command="{Binding ViewModel.OpenDataFolderCommand}">打开数据文件夹</ui:Button>
-            <ui:Button Margin="5" Command="{Binding ViewModel.EditSelectedCommand}">编辑选中</ui:Button>
+            <ui:Button Margin="5" Command="{Binding ViewModel.EditSelectedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">编辑选中</ui:Button>
+            <ui:Button Margin="5" Command="{Binding ViewModel.CompareTextCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">对比文本</ui:Button>
             <!--<ui:ToggleSwitch IsChecked="{Binding ViewModel.Notify}" OffContent="提示关闭" OnContent="提示开启" />-->
             <ui:TextBox
                 Height="35"

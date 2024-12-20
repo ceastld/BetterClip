@@ -34,7 +34,7 @@ public partial class CommonItemViewModel : ObservableObject
         _description = item.Description;
         _dataService = dataService;
     }
-
+    public virtual void Refresh() { }
     //private IDisposable? _editSubscription;
     //public void OpenEdit() =>
     //    _editSubscription = this.ObserveChange()

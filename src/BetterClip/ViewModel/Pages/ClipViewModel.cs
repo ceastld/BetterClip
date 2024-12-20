@@ -68,12 +68,36 @@ public partial class ClipViewModel : ViewModel, IDisposable
     }
 
     [RelayCommand]
-    private void EditSelected(object sender)
+    private void OnEditSelected(object sender)
     {
-        if(SelectedItem is TextItemViewModel textItem)
+        var textItem = (SelectedItems?.Cast<TextItemViewModel>() ?? [])
+            .Concat(Clipitems.Cast<TextItemViewModel>())
+            .Where(x => !string.IsNullOrEmpty(x.Text))
+            .FirstOrDefault();
+        if (textItem != null)
         {
             textItem.Text = CommonHelper.EditText(textItem.Text, sender);
             textItem.SaveIfNeed();
+        }
+    }
+
+    [RelayCommand]
+    private void OnCompareText(object sender)
+    {
+        var items = (SelectedItems?.Cast<TextItemViewModel>().Reverse() ?? [])
+            .Concat(Clipitems.Cast<TextItemViewModel>())
+            .Distinct()
+            .Where(x => !string.IsNullOrEmpty(x.Text))
+            .Take(2)
+            .Reverse()
+            .ToList();
+        if (items.Count == 2)
+        {
+            var oldItem = items[0];
+            var newItem = items[1];
+            (oldItem.Text, newItem.Text) = CommonHelper.CompareText(oldItem.Text, newItem.Text, default, sender);
+            oldItem.SaveIfNeed();
+            newItem.SaveIfNeed();
         }
     }
 

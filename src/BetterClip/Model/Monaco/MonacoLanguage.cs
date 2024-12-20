@@ -36,6 +36,7 @@ public enum MonacoLanguage
     Ini,
     Java,
     JavaScript,
+    Json,
     Julia,
     Kotlin,
     Less,

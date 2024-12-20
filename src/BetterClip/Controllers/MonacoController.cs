@@ -7,14 +7,15 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using BetterClip.Model.Monaco;
+using Microsoft.Extensions.Logging;
 using Microsoft.Web.WebView2.Wpf;
 using Wpf.Ui.Appearance;
 
 namespace BetterClip.Controllers;
 
-public class MonacoController
+public class MonacoController(WebView2 webView)
 {
-    private readonly WebView2 _webView;
+    private readonly WebView2 _webView = webView;
 
     public class TextChangedEventArgs(string newText) : EventArgs
     {
@@ -32,20 +33,15 @@ public class MonacoController
     public event TextChangedEventHandler? OriginalTextChanged;
     public event TextChangedEventHandler? ModifiedTextChanged;
 
-    public MonacoController(WebView2 webView)
-    {
-        _webView = webView;
-    }
-
     public async Task CreateEditorAsync(string content, MonacoLanguage language = MonacoLanguage.None)
     {
-        await Call("createEditor", content, language);
+        await Call("createEditor", content, GetLanguageId(language));
     }
     public async Task CreateDiffEditorAsync(string originalText, string modifiedText, MonacoLanguage language = MonacoLanguage.None)
     {
-        await Call("createDiffEditor", originalText, modifiedText, language);
+        await Call("createDiffEditor", originalText, modifiedText, GetLanguageId(language));
     }
-
+    public async Task SetWordWrap(bool wordWrap) => await Call("setWordWrap", wordWrap);
     public async Task SetThemeAsync(ApplicationTheme appApplicationTheme) => await Call("setTheme", appApplicationTheme);
     private static string GetLanguageId(MonacoLanguage monacoLanguage)
     {
@@ -77,7 +73,7 @@ public class MonacoController
 
     public void ListenToContentChange()
     {
-        _webView.CoreWebView2.WebMessageReceived += async (sender, e) =>
+        _webView.CoreWebView2.WebMessageReceived += (sender, e) =>
         {
             string messageJson = e.WebMessageAsJson;
             MessagePackage? message = JsonSerializer.Deserialize<MessagePackage>(messageJson);
@@ -88,20 +84,22 @@ public class MonacoController
             switch (message.Type)
             {
                 case MessageTypes.TextChanged:
-                    TextChanged?.Invoke(this, new TextChangedEventArgs(await GetTextAsync()));
+                    TextChanged?.Invoke(this, new TextChangedEventArgs(message.Data!));
                     break;
                 case MessageTypes.OriginalTextChanged:
-                    OriginalTextChanged?.Invoke(this, new TextChangedEventArgs(await GetOriginalTextAsync()));
+                    OriginalTextChanged?.Invoke(this, new TextChangedEventArgs(message.Data!));
                     break;
                 case MessageTypes.ModifiedTextChanged:
-                    ModifiedTextChanged?.Invoke(this, new TextChangedEventArgs(await GetModifiedTextAsync()));
+                    ModifiedTextChanged?.Invoke(this, new TextChangedEventArgs(message.Data!));
                     break;
                 default:
                     break;
             }
+            _logger.LogInformation("Message received: {0}", messageJson);
         };
     }
 
+    private ILogger _logger = App.GetLogger<MonacoController>();
     public enum MessageTypes
     {
         TextChanged = 0,
@@ -131,15 +129,5 @@ public class MonacoController
         var @params = string.Join(',', objects.Select(o => JsonSerializer.Serialize(o, JsonOptions)));
         //name = name[0].ToString().ToLower() + name[1..].TrimEnd();
         return await ExecuteScriptAsync($"editor.{name}({@params})");
-    }
-
-    public async void DispatchScript(string script)
-    {
-        if (_webView == null)
-        {
-            return;
-        }
-
-        await Application.Current.Dispatcher.InvokeAsync(async () => await _webView!.ExecuteScriptAsync(script));
     }
 }

@@ -12,10 +12,16 @@ public partial class FolderItemViewModel(FolderItem item, ICommonDataService dat
     private readonly FolderItem _item = item;
     private ObservableCollection<CommonItemViewModel>? _children;
     public ObservableCollection<CommonItemViewModel> Children => _children ??= CreateChildren();
+
+    public override void Refresh()
+    {
+        _children = CreateChildren();
+        OnPropertyChanged(nameof(Children));
+    }
+
     private ObservableCollection<CommonItemViewModel> CreateChildren()
     {
         _logger.LogInformation("{0}", _dataService.ViewModels);
-
         var vms = _dataService.SelectViewModels(_item.Children).ToList();
         vms.ForEach(vm => vm.Parent = Item.Id);
         var children = new ObservableCollection<CommonItemViewModel>(vms);

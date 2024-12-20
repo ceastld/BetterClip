@@ -20,6 +20,7 @@ using Wpf.Ui.Appearance;
 using Serilog.Sinks.RichTextBox.Abstraction;
 using Serilog.Events;
 using Serilog.Sinks.RichTextBox.Themes;
+using BetterClip.Service.Explorer;
 
 namespace BetterClip
 {
@@ -60,7 +61,7 @@ namespace BetterClip
         services.AddSingleton<ISnackbarService, SnackbarService>();
 
         services.AddHostedService<ApplicationHostService>();
-        ApplicationHostService.NavagatePageType = typeof(FavorPage);
+        ApplicationHostService.NavigatePageType = typeof(FavorPage);
 
         // Page resolver service
         services.AddSingleton<IPageService, PageService>();
@@ -79,6 +80,9 @@ namespace BetterClip
         services.AddSingleton<IClipboardService, ClipboardService>();
         services.AddTransient<SearchHints>();
         services.AddSingleton<IFavorDataService, FavorDataService>();
+
+        // Other services
+        services.AddSingleton<IExplorerService, ExplorerService>();
 
         // Main window with navigation
         services.AddSingleton<INavigationWindow, MainWindow>();
@@ -125,8 +129,8 @@ namespace BetterClip
             // see: https://stackoverflow.com/questions/65739383/dispatcherscheduler-missing-from-system-reactive-5-0
             SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
             _host.Start();
-            var clipboardService = GetService<IClipboardService>();
-            clipboardService.MonitorOn();
+            GetService<IClipboardService>().MonitorOn();
+            GetService<IExplorerService>().MonitorOn();
         }
 
         /// <summary>
